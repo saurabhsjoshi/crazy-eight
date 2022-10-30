@@ -1,0 +1,5 @@
+rootProject.name = 'crazy-eight'
+include 'frontend'
+include 'backend'
+include 'acceptance'
+

@@ -1,0 +1,17 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.5.0"
+    id "base"
+}
+
+group 'org.joshi'
+version '0.0.1-SNAPSHOT'
+
+node {
+    download = true
+}
+
+task npmBuild(type: NpmTask) {
+    args = ["run", "build"]
+}
+
+assemble.dependsOn(npmBuild)
