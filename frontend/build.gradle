@@ -10,7 +10,7 @@ node {
     download = true
 }
 
-task npmBuild(type: NpmTask) {
+task npmBuild(type: NpmTask, dependsOn: 'npmInstall') {
     args = ["run", "build"]
 }
 
