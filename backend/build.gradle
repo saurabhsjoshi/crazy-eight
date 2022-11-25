@@ -46,9 +46,10 @@ bootJar {
     archiveName = "crazy-eight.jar"
 }
 
-// Make sure frontend is actually built before backend is compiled
-compileJava.dependsOn(":frontend:build")
+copyFrontend.dependsOn(":frontend:assemble")
 
 // Copy frontend artifacts in static resources directory so that it gets packaged with final JAR
+jar.dependsOn(copyFrontend)
+bootJarMainClassName.dependsOn(copyFrontend)
 bootJar.dependsOn(copyFrontend)
 
