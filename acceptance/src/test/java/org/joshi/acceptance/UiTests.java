@@ -91,6 +91,11 @@ public class UiTests {
         var connectionStatus = TestUtilities.getConnectionLbl(driver);
         new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.textToBePresentInElement(connectionStatus, "Connection Status: Connected"));
+
+        var registerState = TestUtilities.getUserRegisterLbl(driver);
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.textToBePresentInElement(registerState, "User Registration: Registered"));
+
         driver.quit();
     }
 }

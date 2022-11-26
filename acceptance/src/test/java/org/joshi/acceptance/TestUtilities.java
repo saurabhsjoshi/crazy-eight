@@ -28,6 +28,15 @@ public class TestUtilities {
         getUsernameLbl(driver);
     }
 
+    public static WebElement getById(WebDriver driver, String id) {
+        return new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+    }
+
+    public static WebElement getUserRegisterLbl(WebDriver driver) {
+        return getById(driver, "userRegisterLbl");
+    }
+
     public static WebElement getUsernameLbl(WebDriver driver) {
         return new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("usernameLbl")));
