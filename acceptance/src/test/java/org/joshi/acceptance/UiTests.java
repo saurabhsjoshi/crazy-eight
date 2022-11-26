@@ -21,7 +21,10 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AcceptanceTest {
+/**
+ * UI only test cases.
+ */
+public class UiTests {
 
     Process server;
 
@@ -75,17 +78,14 @@ public class AcceptanceTest {
     }
 
     /**
-     * Test case to validate selenium is working as expected.
+     * Test that checks if user can log in via the UI.
      */
     @Test
-    void helloSelenium() {
+    void testLogin() {
         WebDriver driver = getDriver();
         driver.get("http://localhost:8080");
-
-        var element = new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By.className("App-link")));
-
-        assertEquals("https://reactjs.org/", element.getAttribute("href"));
+        TestUtilities.login(driver, "Player1");
+        assertEquals("Username: Player1", TestUtilities.getUsernameLbl(driver).getText());
         driver.quit();
     }
 }
