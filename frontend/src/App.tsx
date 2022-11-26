@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import {Container, Row} from "react-bootstrap";
@@ -31,7 +31,9 @@ function Login(props: LoginProps) {
 
 function GameScreen(props: { username: string }) {
   const [socketUrl] = useState('ws://localhost:8080/api');
-  const {readyState } = useWebSocket(socketUrl);
+  const {lastJsonMessage, sendJsonMessage, readyState} = useWebSocket(socketUrl);
+
+
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
     [ReadyState.OPEN]: 'Connected',
@@ -39,6 +41,28 @@ function GameScreen(props: { username: string }) {
     [ReadyState.CLOSED]: 'Closed',
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
+
+  enum RegistrationStatus {
+    NOT_REGISTERED,
+    REGISTERED
+  }
+
+  const [registerState, setRegisterState] = useState(RegistrationStatus.NOT_REGISTERED);
+
+  const registrationStatus = {
+    [RegistrationStatus.REGISTERED]: 'Registered',
+    [RegistrationStatus.NOT_REGISTERED]: 'Not Registered'
+  }[registerState];
+
+  useEffect(() => {
+    if (readyState == ReadyState.OPEN && registerState == RegistrationStatus.NOT_REGISTERED) {
+      sendJsonMessage({
+        "type": "UserRegister",
+        "username": props.username
+      });
+      setRegisterState(RegistrationStatus.REGISTERED);
+    }
+  }, [readyState])
 
   return (
       <Container className="max-width">
@@ -50,6 +74,9 @@ function GameScreen(props: { username: string }) {
         </Row>
         <Row>
           <h6 id="connectionLbl">Connection Status: {connectionStatus}</h6>
+        </Row>
+        <Row>
+          <h6 id="userRegisterLbl">User Registration: {registrationStatus}</h6>
         </Row>
       </Container>
   )
