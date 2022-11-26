@@ -85,7 +85,12 @@ public class UiTests {
         WebDriver driver = getDriver();
         driver.get("http://localhost:8080");
         TestUtilities.login(driver, "Player1");
+
         assertEquals("Username: Player1", TestUtilities.getUsernameLbl(driver).getText());
+
+        var connectionStatus = TestUtilities.getConnectionLbl(driver);
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.textToBePresentInElement(connectionStatus, "Connection Status: Connected"));
         driver.quit();
     }
 }

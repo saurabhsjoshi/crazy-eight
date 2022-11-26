@@ -32,4 +32,9 @@ public class TestUtilities {
         return new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("usernameLbl")));
     }
+
+    public static WebElement getConnectionLbl(WebDriver driver) {
+        return new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("connectionLbl")));
+    }
 }
