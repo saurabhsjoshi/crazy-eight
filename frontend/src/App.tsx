@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import {Container, Row} from "react-bootstrap";
+import useWebSocket, {ReadyState} from "react-use-websocket";
 
 interface LoginProps {
   usernameSet: (name: string) => void;
@@ -29,6 +30,16 @@ function Login(props: LoginProps) {
 }
 
 function GameScreen(props: { username: string }) {
+  const [socketUrl] = useState('ws://localhost:8080/api');
+  const {readyState } = useWebSocket(socketUrl);
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Connected',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  }[readyState];
+
   return (
       <Container className="max-width">
         <Row>
@@ -36,6 +47,9 @@ function GameScreen(props: { username: string }) {
         </Row>
         <Row>
           <h6 id="usernameLbl">Username: {props.username}</h6>
+        </Row>
+        <Row>
+          <h6 id="connectionLbl">Connection Status: {connectionStatus}</h6>
         </Row>
       </Container>
   )
