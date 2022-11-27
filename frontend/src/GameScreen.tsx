@@ -4,7 +4,7 @@ import {Container, Row} from "react-bootstrap";
 
 export function GameScreen(props: { username: string }) {
   const [socketUrl] = useState('ws://localhost:8080/api');
-  const {lastJsonMessage, sendJsonMessage, readyState} = useWebSocket(socketUrl);
+  const {sendJsonMessage, readyState} = useWebSocket(socketUrl);
 
 
   const connectionStatus = {
@@ -28,14 +28,14 @@ export function GameScreen(props: { username: string }) {
   }[registerState];
 
   useEffect(() => {
-    if (readyState == ReadyState.OPEN && registerState == RegistrationStatus.NOT_REGISTERED) {
+    if (readyState === ReadyState.OPEN && registerState === RegistrationStatus.NOT_REGISTERED) {
       sendJsonMessage({
         "type": "UserRegister",
         "username": props.username
       });
       setRegisterState(RegistrationStatus.REGISTERED);
     }
-  }, [readyState])
+  }, [readyState, registerState])
 
   return (
       <Container className="max-width">
