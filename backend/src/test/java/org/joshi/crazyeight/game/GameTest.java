@@ -196,4 +196,25 @@ public class GameTest {
 
         assertEquals("testUser1", nextPlayer);
     }
+
+    @Test
+    void testCompleteTurn_Skip() {
+        addFourPlayers();
+        game.setPlayerHand();
+        game.setTopCard();
+
+        assertEquals("testUser1", game.nextTurn());
+        List<String> riggedCards = List.of(
+                "4H 7S 5D 6D 9D",
+                "4S QD KC 8H 10D",
+                "9S 6C 9C JD 3H",
+                "7D JH QH KH 5C"
+        );
+        game.rigRound("4D", riggedCards);
+        game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.FOUR)));
+
+        var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.QUEEN)));
+
+        assertEquals("testUser4", nextPlayer);
+    }
 }
