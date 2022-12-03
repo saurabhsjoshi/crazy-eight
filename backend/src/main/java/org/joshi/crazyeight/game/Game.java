@@ -3,7 +3,6 @@ package org.joshi.crazyeight.game;
 import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.CardDeck;
 import org.joshi.crazyeight.deck.Rank;
-import org.joshi.crazyeight.deck.Suit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,10 @@ public class Game {
     private final CardDeck deck = new CardDeck();
 
     private Card topCard;
+
+    private int currentPlayer = -1;
+
+    private int direction = 1;
 
     public void addPlayer(String username) {
         players.add(new Player(username, 0));
@@ -69,7 +72,14 @@ public class Game {
      * Get the username of next player.
      */
     public String nextTurn() {
-        // TODO: Implement
-        return "";
+        currentPlayer += direction;
+
+        if (currentPlayer < 0) {
+            currentPlayer = players.size() - 1;
+        } else if (currentPlayer >= players.size()) {
+            currentPlayer = 0;
+        }
+
+        return players.get(currentPlayer).getUsername();
     }
 }
