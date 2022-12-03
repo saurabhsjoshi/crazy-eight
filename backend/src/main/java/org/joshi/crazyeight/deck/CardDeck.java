@@ -21,7 +21,7 @@ public class CardDeck {
     public void reset() {
         for (var r : Rank.values()) {
             for (var s : Suit.values()) {
-                cards.add(new Card(r, s));
+                cards.add(new Card(s, r));
             }
         }
     }

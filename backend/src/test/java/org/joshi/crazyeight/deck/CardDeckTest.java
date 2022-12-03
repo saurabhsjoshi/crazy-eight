@@ -8,13 +8,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardDeckTest {
-
     @Test
     public void testCardDeckShuffle() {
         List<Card> expectedCards = new ArrayList<>();
         for (var r : Rank.values()) {
             for (var s : Suit.values()) {
-                expectedCards.add(new Card(r, s));
+                expectedCards.add(new Card(s, r));
             }
         }
 
