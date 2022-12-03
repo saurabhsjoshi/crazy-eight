@@ -7,7 +7,6 @@ public record Card(Suit suit, Rank rank) {
     }
 
     public static Card fromText(String text) {
-        //TODO: Implement
-        return null;
+        return new Card(Suit.fromText(text.substring(1)), Rank.fromText(text.substring(0, 1)));
     }
 }

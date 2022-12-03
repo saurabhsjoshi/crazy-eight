@@ -15,6 +15,24 @@ public enum Rank {
     KING,
     ACE;
 
+    static Rank fromText(String text) {
+        return switch (text) {
+            case "1" -> ACE;
+            case "2" -> TWO;
+            case "3" -> THREE;
+            case "4" -> FOUR;
+            case "5" -> FIVE;
+            case "6" -> SIX;
+            case "7" -> SEVEN;
+            case "8" -> EIGHT;
+            case "9" -> NINE;
+            case "10" -> TEN;
+            case "J" -> JACK;
+            case "Q" -> QUEEN;
+            default -> KING;
+        };
+    }
+
     String toText() {
         switch (this) {
             case TWO -> {
@@ -57,7 +75,6 @@ public enum Rank {
                 return "1";
             }
         }
-        
         return "";
     }
 }

@@ -7,20 +7,20 @@ public enum Suit {
     SPADES;
 
     String toText() {
-        switch (this) {
-            case CLUBS -> {
-                return "C";
-            }
-            case DIAMONDS -> {
-                return "D";
-            }
-            case HEART -> {
-                return "H";
-            }
-            case SPADES -> {
-                return "S";
-            }
-        }
-        return "";
+        return switch (this) {
+            case CLUBS -> "C";
+            case DIAMONDS -> "D";
+            case HEART -> "H";
+            case SPADES -> "S";
+        };
+    }
+
+    static Suit fromText(String text) {
+        return switch (text) {
+            case "C" -> CLUBS;
+            case "D" -> DIAMONDS;
+            case "H" -> HEART;
+            default -> SPADES;
+        };
     }
 }
