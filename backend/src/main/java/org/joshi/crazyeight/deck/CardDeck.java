@@ -34,6 +34,11 @@ public class CardDeck {
         return cards.remove(cards.size() - 1);
     }
 
+    public List<Card> top(int size) {
+        //TODO: implement
+        return new ArrayList<>();
+    }
+
     public int size() {
         return cards.size();
     }

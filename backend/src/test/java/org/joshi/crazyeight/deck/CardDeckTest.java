@@ -35,4 +35,12 @@ public class CardDeckTest {
         deck.top();
         assertEquals(51, deck.size());
     }
+
+    @Test
+    public void testTop() {
+        CardDeck deck = new CardDeck();
+        var cards = deck.top(5);
+        assertEquals(5, cards.size());
+        assertEquals(47, deck.size());
+    }
 }
