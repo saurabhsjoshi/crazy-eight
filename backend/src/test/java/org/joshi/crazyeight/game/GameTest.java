@@ -175,4 +175,25 @@ public class GameTest {
         assertEquals(playedCard, game.getTopCard());
         assertEquals("testUser2", nextPlayer);
     }
+
+    @Test
+    void testCompleteTurn_Reverse() {
+        addFourPlayers();
+        game.setPlayerHand();
+        game.setTopCard();
+
+        assertEquals("testUser1", game.nextTurn());
+        List<String> riggedCards = List.of(
+                "4H 7S 5D 6D 9D",
+                "4S 1D KC 8H 10D",
+                "9S 6C 9C JD 3H",
+                "7D JH QH KH 5C"
+        );
+        game.rigRound("4D", riggedCards);
+        game.completeTurn(new CompleteTurn(new Card(Suit.HEART, Rank.FOUR)));
+
+        var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.ACE)));
+
+        assertEquals("testUser1", nextPlayer);
+    }
 }
