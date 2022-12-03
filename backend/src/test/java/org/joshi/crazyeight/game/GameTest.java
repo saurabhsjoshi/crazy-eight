@@ -1,5 +1,8 @@
 package org.joshi.crazyeight.game;
 
+import org.joshi.crazyeight.deck.Card;
+import org.joshi.crazyeight.deck.Rank;
+import org.joshi.crazyeight.deck.Suit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
 
     private Game game;
+
+    private void addFourPlayers() {
+        game.addPlayer("testUser1");
+        game.addPlayer("testUser2");
+        game.addPlayer("testUser3");
+        game.addPlayer("testUser4");
+    }
 
     @BeforeEach
     public void setup() {
@@ -54,12 +64,12 @@ public class GameTest {
         assertNotNull(game.getTopCard());
     }
 
-    private void addFourPlayers() {
-        game.addPlayer("testUser1");
-        game.addPlayer("testUser2");
-        game.addPlayer("testUser3");
-        game.addPlayer("testUser4");
+    @Test
+    void testSetTopCard_8() {
+        var eightCard = new Card(Suit.HEART, Rank.EIGHT);
+        game.getDeck().addCard(eightCard);
+        game.setTopCard();
+        assertNotNull(game.getTopCard());
+        assertNotSame(eightCard, game.getTopCard());
     }
-
-
 }
