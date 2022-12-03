@@ -90,4 +90,8 @@ public class Game {
             direction = -1;
         }
     }
+
+    public void drawCard(String username) {
+        //TODO: implement
+    }
 }

@@ -90,4 +90,12 @@ public class GameTest {
         game.reverse();
         assertEquals("testUser1", game.nextTurn());
     }
+
+    @Test
+    void testDrawCard() {
+        addFourPlayers();
+        game.setPlayerHand();
+        game.drawCard("testUser1");
+        assertEquals(6, game.getPlayers().get(0).getHand().size());
+    }
 }
