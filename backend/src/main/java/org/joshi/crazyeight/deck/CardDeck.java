@@ -19,6 +19,7 @@ public class CardDeck {
      * Reset the deck of cards.
      */
     public void reset() {
+        cards.clear();
         for (var r : Rank.values()) {
             for (var s : Suit.values()) {
                 cards.add(new Card(s, r));
@@ -48,5 +49,9 @@ public class CardDeck {
 
     public boolean empty() {
         return cards.isEmpty();
+    }
+
+    public void addCard(Card card) {
+        cards.add(card);
     }
 }
