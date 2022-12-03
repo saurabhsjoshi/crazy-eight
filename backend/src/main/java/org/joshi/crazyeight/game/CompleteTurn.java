@@ -15,6 +15,11 @@ public class CompleteTurn {
     private final Card card;
 
     /**
+     * Second card a player can play to avoid drawing two cards.
+     */
+    private Card drawTwoCard;
+
+    /**
      * Optional suit set by player if they played an eight.
      */
     private Suit suit;

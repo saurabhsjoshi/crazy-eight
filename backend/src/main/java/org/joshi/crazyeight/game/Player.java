@@ -16,4 +16,13 @@ public class Player {
     private final String username;
     private final int score;
     private List<Card> hand = new ArrayList<>();
+
+    public void removeCard(Card card) {
+        for (var c : hand) {
+            if (c.rank() == card.rank() && c.suit() == card.suit()) {
+                hand.remove(c);
+                break;
+            }
+        }
+    }
 }

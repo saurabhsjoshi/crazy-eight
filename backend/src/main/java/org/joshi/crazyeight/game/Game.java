@@ -140,20 +140,24 @@ public class Game {
     }
 
     public String completeTurn(CompleteTurn turn) {
-        var hand = players.get(currentPlayer).getHand();
 
-        for (var c : hand) {
-            if (c.rank() == turn.getCard().rank() && c.suit() == turn.getCard().suit()) {
-                players.get(currentPlayer).getHand().remove(c);
-                break;
-            }
-        }
-
+        players.get(currentPlayer).removeCard(turn.getCard());
         topCard = turn.getCard();
+
+        if (cardsToDraw != 0) {
+            // Player skipped draw two
+            if (turn.getDrawTwoCard() != null) {
+                players.get(currentPlayer).removeCard(turn.getDrawTwoCard());
+                topCard = turn.getDrawTwoCard();
+            }
+
+            cardsToDraw = 0;
+        }
 
         switch (topCard.rank()) {
             case ACE -> reverse();
             case QUEEN -> nextTurn();
+            case TWO -> cardsToDraw += 2;
         }
 
         return nextTurn();
