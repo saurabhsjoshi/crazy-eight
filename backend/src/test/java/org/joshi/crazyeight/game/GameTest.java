@@ -95,7 +95,18 @@ public class GameTest {
     void testDrawCard() {
         addFourPlayers();
         game.setPlayerHand();
-        game.drawCard("testUser1");
-        assertEquals(6, game.getPlayers().get(0).getHand().size());
+        game.nextTurn();
+
+        for (int i = 0; i < 3; i++) {
+            game.drawCard();
+        }
+
+        assertEquals(8, game.getPlayers().get(0).getHand().size());
+
+
+        game.drawCard();
+
+        // Should not allow to draw more than three cards
+        assertEquals(8, game.getPlayers().get(0).getHand().size());
     }
 }

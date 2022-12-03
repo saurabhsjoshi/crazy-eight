@@ -91,7 +91,7 @@ public class Game {
         }
     }
 
-    public void drawCard(String username) {
+    public void drawCard() {
         //TODO: implement
     }
 }
