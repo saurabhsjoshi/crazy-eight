@@ -39,6 +39,8 @@ public class Game {
     }
 
     public void resetRound() {
-        //TODO: Implement
+        deck.reset();
+        deck.shuffle();
+        topCard = null;
     }
 }
