@@ -24,6 +24,8 @@ public class Game {
 
     private int cardsDrawn = 0;
 
+    private int cardsToDraw = 0;
+
     public void addPlayer(String username) {
         players.add(new Player(username, 0));
     }
@@ -155,5 +157,9 @@ public class Game {
         }
 
         return nextTurn();
+    }
+
+    public int getCardsToDraw() {
+        return cardsToDraw;
     }
 }
