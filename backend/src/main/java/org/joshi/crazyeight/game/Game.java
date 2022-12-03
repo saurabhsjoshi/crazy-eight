@@ -102,7 +102,38 @@ public class Game {
         cardsDrawn++;
     }
 
-    public void rigRound(String topCard, List<String> riggedCards) {
-        //TODO:
+    public void rigRound(String riggedTopCard, List<String> riggedCards) {
+        Card card = Card.fromText(riggedTopCard);
+
+        deck.remove(card);
+        deck.addCard(topCard);
+
+        topCard = new Card(card.suit(), card.rank());
+
+        for (int i = 0; i < riggedCards.size(); i++) {
+            var p = players.get(i);
+
+            for (var c : p.getHand()) {
+                deck.addCard(c);
+            }
+
+            var cards = getCardsFromText(riggedCards.get(i));
+
+            for (var c : cards) {
+                deck.remove(c);
+            }
+
+            p.setHand(cards);
+        }
+    }
+
+    private List<Card> getCardsFromText(String text) {
+        List<Card> cards = new ArrayList<>();
+
+        var split = text.split("\\s+");
+        for (var s : split) {
+            cards.add(Card.fromText(s));
+        }
+        return cards;
     }
 }

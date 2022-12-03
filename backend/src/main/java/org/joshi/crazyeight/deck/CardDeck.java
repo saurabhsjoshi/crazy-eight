@@ -51,13 +51,17 @@ public class CardDeck {
         return cards.isEmpty();
     }
 
-    public void addCard(Card card) {
+    public void remove(Card card) {
         for (var c : cards) {
             if (c.rank() == card.rank() && c.suit() == card.suit()) {
                 cards.remove(c);
                 break;
             }
         }
+    }
+
+    public void addCard(Card card) {
+        remove(card);
         cards.add(card);
     }
 }
