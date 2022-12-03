@@ -105,7 +105,7 @@ public class Game {
     }
 
     public void drawCards() {
-        //TODO: Implement
+        players.get(currentPlayer).getHand().addAll(deck.top(cardsToDraw));
     }
 
     public void rigRound(String riggedTopCard, List<String> riggedCards) {
