@@ -48,10 +48,18 @@ public class GameTest {
         }
     }
 
+    @Test
+    void testSetTopCard() {
+        game.setTopCard();
+        assertNotNull(game.getTopCard());
+    }
+
     private void addFourPlayers() {
         game.addPlayer("testUser1");
         game.addPlayer("testUser2");
         game.addPlayer("testUser3");
         game.addPlayer("testUser4");
     }
+
+
 }

@@ -49,4 +49,8 @@ public class Game {
             p.setHand(deck.top(5));
         }
     }
+
+    public void setTopCard() {
+        // TODO: Implement
+    }
 }
