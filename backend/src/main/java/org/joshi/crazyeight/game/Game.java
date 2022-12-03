@@ -82,4 +82,8 @@ public class Game {
 
         return players.get(currentPlayer).getUsername();
     }
+
+    public void reverse() {
+        // TODO: Implement
+    }
 }

@@ -81,4 +81,13 @@ public class GameTest {
         assertEquals("testUser2", game.nextTurn());
         assertEquals("testUser3", game.nextTurn());
     }
+
+    @Test
+    void testReverse() {
+        addFourPlayers();
+        assertEquals("testUser1", game.nextTurn());
+        assertEquals("testUser2", game.nextTurn());
+        game.reverse();
+        assertEquals("testUser1", game.nextTurn());
+    }
 }
