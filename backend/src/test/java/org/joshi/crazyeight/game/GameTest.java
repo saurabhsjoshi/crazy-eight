@@ -71,5 +71,6 @@ public class GameTest {
         game.setTopCard();
         assertNotNull(game.getTopCard());
         assertNotSame(eightCard, game.getTopCard());
+        assertEquals(51, game.getDeck().size());
     }
 }

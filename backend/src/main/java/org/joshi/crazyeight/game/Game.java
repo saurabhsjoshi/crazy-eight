@@ -2,6 +2,7 @@ package org.joshi.crazyeight.game;
 
 import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.CardDeck;
+import org.joshi.crazyeight.deck.Rank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,15 @@ public class Game {
     }
 
     public void setTopCard() {
+        if (topCard != null) {
+            topCard = deck.top();
+        }
         topCard = deck.top();
+        while (topCard.rank() == Rank.EIGHT) {
+            var cur = new Card(topCard.suit(), topCard.rank());
+            topCard = deck.top();
+            deck.addCard(cur);
+            deck.shuffle();
+        }
     }
 }
