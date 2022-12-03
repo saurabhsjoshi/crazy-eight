@@ -43,4 +43,11 @@ public class CardDeckTest {
         assertEquals(5, cards.size());
         assertEquals(47, deck.size());
     }
+
+    @Test
+    public void testReset() {
+        CardDeck deck = new CardDeck();
+        deck.reset();
+        assertEquals(52, deck.size());
+    }
 }
