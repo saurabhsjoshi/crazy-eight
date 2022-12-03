@@ -84,6 +84,10 @@ public class Game {
     }
 
     public void reverse() {
-        // TODO: Implement
+        if (direction == -1) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
     }
 }
