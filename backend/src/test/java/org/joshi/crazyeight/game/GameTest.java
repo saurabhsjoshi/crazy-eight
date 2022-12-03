@@ -6,6 +6,8 @@ import org.joshi.crazyeight.deck.Suit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
@@ -108,5 +110,40 @@ public class GameTest {
 
         // Should not allow to draw more than three cards
         assertEquals(8, game.getPlayers().get(0).getHand().size());
+    }
+
+    @Test
+    void testRigRound() {
+        addFourPlayers();
+        game.setTopCard();
+        game.setTopCard();
+
+        List<String> riggedCards = List.of(
+                "4H 7S 5D 6D 9D",
+                "4S 6S KC 8H 10D",
+                "9S 6C 9C JD 3H",
+                "7D JH QH KH 5C"
+        );
+
+        game.rigRound("4D", riggedCards);
+
+        var topCard = game.getTopCard();
+        assertEquals(Rank.FOUR, topCard.rank());
+        assertEquals(Suit.DIAMONDS, topCard.suit());
+
+        var hand = game.getPlayers().get(0).getHand();
+
+        List<Card> expectedCards = List.of(
+                new Card(Suit.HEART, Rank.FOUR),
+                new Card(Suit.SPADES, Rank.SEVEN),
+                new Card(Suit.DIAMONDS, Rank.FIVE),
+                new Card(Suit.DIAMONDS, Rank.SIX),
+                new Card(Suit.DIAMONDS, Rank.NINE)
+        );
+
+        for (int i = 0; i < 5; i++) {
+            assertEquals(expectedCards.get(i).rank(), hand.get(i).rank());
+            assertEquals(expectedCards.get(i).suit(), hand.get(i).suit());
+        }
     }
 }

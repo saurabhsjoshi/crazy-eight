@@ -101,4 +101,8 @@ public class Game {
         players.get(currentPlayer).getHand().add(deck.top());
         cardsDrawn++;
     }
+
+    public void rigRound(String topCard, List<String> riggedCards) {
+        //TODO:
+    }
 }
