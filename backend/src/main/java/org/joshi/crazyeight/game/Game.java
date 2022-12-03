@@ -19,7 +19,7 @@ public class Game {
     }
 
     public boolean canStartGame() {
-        //TODO: Implement
-        return false;
+        var size = players.size();
+        return size > 2 && size < 5;
     }
 }
