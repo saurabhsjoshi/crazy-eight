@@ -54,7 +54,7 @@ public enum Rank {
                 return "K";
             }
             case ACE -> {
-                return "A";
+                return "1";
             }
         }
         
