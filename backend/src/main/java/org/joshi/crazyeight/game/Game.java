@@ -149,6 +149,10 @@ public class Game {
 
         topCard = turn.getCard();
 
+        if (topCard.rank() == Rank.ACE) {
+            reverse();
+        }
+
         return nextTurn();
     }
 }
