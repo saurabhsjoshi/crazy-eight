@@ -1,16 +1,21 @@
 package org.joshi.crazyeight.game;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
 
+    private Game game;
+
+    @BeforeEach
+    public void setup() {
+        game = new Game();
+    }
+
     @Test
     void testCanStartGame() {
-        Game game = new Game();
-
         game.addPlayer("testUser1");
         assertFalse(game.canStartGame());
 
@@ -25,5 +30,12 @@ public class GameTest {
 
         game.addPlayer("testUser5");
         assertFalse(game.canStartGame());
+    }
+
+    @Test
+    void testResetRound() {
+        game.resetRound();
+        assertEquals(52, game.getDeck().size());
+        assertNull(game.getTopCard());
     }
 }

@@ -1,5 +1,6 @@
 package org.joshi.crazyeight.game;
 
+import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.CardDeck;
 
 import java.util.ArrayList;
@@ -14,9 +15,7 @@ public class Game {
 
     private final CardDeck deck = new CardDeck();
 
-    public Game() {
-        deck.shuffle();
-    }
+    private Card topCard;
 
     public void addPlayer(String username) {
         players.add(new Player(username, 0));
@@ -30,8 +29,16 @@ public class Game {
         return deck;
     }
 
+    public Card getTopCard() {
+        return topCard;
+    }
+
     public boolean canStartGame() {
         var size = players.size();
         return size > 2 && size < 5;
+    }
+
+    public void resetRound() {
+        //TODO: Implement
     }
 }
