@@ -136,4 +136,9 @@ public class Game {
         }
         return cards;
     }
+
+    public String completeTurn(CompleteTurn turn) {
+        // TODO: Implement
+        return null;
+    }
 }

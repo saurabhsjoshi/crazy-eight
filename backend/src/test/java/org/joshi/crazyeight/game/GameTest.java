@@ -3,6 +3,7 @@ package org.joshi.crazyeight.game;
 import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.Rank;
 import org.joshi.crazyeight.deck.Suit;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -147,5 +148,31 @@ public class GameTest {
         }
 
         assertEquals(31, game.getDeck().size());
+    }
+
+    @Test
+    void testCompleteTurn() {
+        addFourPlayers();
+        game.setPlayerHand();
+        game.setTopCard();
+
+        assertEquals("testUser1", game.nextTurn());
+
+        List<String> riggedCards = List.of(
+                "4H 7S 5D 6D 9D",
+                "4S 6S KC 8H 10D",
+                "9S 6C 9C JD 3H",
+                "7D JH QH KH 5C"
+        );
+
+        game.rigRound("4D", riggedCards);
+
+        Card playedCard = new Card(Suit.HEART, Rank.FOUR);
+        CompleteTurn completeTurn = new CompleteTurn(playedCard);
+
+        var nextPlayer = game.completeTurn(completeTurn);
+
+        assertEquals(playedCard, game.getTopCard());
+        assertEquals("testUser2", nextPlayer);
     }
 }
