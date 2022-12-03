@@ -115,7 +115,7 @@ public class GameTest {
     @Test
     void testRigRound() {
         addFourPlayers();
-        game.setTopCard();
+        game.setPlayerHand();
         game.setTopCard();
 
         List<String> riggedCards = List.of(
@@ -145,5 +145,7 @@ public class GameTest {
             assertEquals(expectedCards.get(i).rank(), hand.get(i).rank());
             assertEquals(expectedCards.get(i).suit(), hand.get(i).suit());
         }
+
+        assertEquals(31, game.getDeck().size());
     }
 }
