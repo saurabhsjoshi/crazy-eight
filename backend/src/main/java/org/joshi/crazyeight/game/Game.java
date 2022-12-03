@@ -138,7 +138,17 @@ public class Game {
     }
 
     public String completeTurn(CompleteTurn turn) {
-        // TODO: Implement
-        return null;
+        var hand = players.get(currentPlayer).getHand();
+
+        for (var c : hand) {
+            if (c.rank() == turn.getCard().rank() && c.suit() == turn.getCard().suit()) {
+                players.get(currentPlayer).getHand().remove(c);
+                break;
+            }
+        }
+
+        topCard = turn.getCard();
+
+        return nextTurn();
     }
 }
