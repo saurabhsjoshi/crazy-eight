@@ -3,6 +3,7 @@ package org.joshi.crazyeight.game;
 import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.CardDeck;
 import org.joshi.crazyeight.deck.Rank;
+import org.joshi.crazyeight.deck.Suit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,5 +63,13 @@ public class Game {
             deck.addCard(cur);
             deck.shuffle();
         }
+    }
+
+    /**
+     * Get the username of next player.
+     */
+    public String nextTurn() {
+        // TODO: Implement
+        return "";
     }
 }

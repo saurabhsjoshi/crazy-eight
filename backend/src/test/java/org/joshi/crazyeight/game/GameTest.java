@@ -73,4 +73,12 @@ public class GameTest {
         assertNotSame(eightCard, game.getTopCard());
         assertEquals(51, game.getDeck().size());
     }
+
+    @Test
+    void testNextTurn() {
+        addFourPlayers();
+        assertEquals("testUser1", game.nextTurn());
+        assertEquals("testUser2", game.nextTurn());
+        assertEquals("testUser3", game.nextTurn());
+    }
 }
