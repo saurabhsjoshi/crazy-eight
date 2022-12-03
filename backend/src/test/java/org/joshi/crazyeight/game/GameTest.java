@@ -38,4 +38,20 @@ public class GameTest {
         assertEquals(52, game.getDeck().size());
         assertNull(game.getTopCard());
     }
+
+    @Test
+    void testSetPlayerHand() {
+        addFourPlayers();
+        game.setPlayerHand();
+        for (var p : game.getPlayers()) {
+            assertEquals(5, p.getHand().size());
+        }
+    }
+
+    private void addFourPlayers() {
+        game.addPlayer("testUser1");
+        game.addPlayer("testUser2");
+        game.addPlayer("testUser3");
+        game.addPlayer("testUser4");
+    }
 }
