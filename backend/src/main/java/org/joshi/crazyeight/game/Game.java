@@ -51,6 +51,6 @@ public class Game {
     }
 
     public void setTopCard() {
-        // TODO: Implement
+        topCard = deck.top();
     }
 }
