@@ -45,6 +45,8 @@ public class Game {
     }
 
     public void setPlayerHand() {
-        // TODO: Implement
+        for (var p : players) {
+            p.setHand(deck.top(5));
+        }
     }
 }
