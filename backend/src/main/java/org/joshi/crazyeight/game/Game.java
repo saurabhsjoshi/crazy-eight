@@ -22,6 +22,8 @@ public class Game {
 
     private int direction = 1;
 
+    private int cardsDrawn = 0;
+
     public void addPlayer(String username) {
         players.add(new Player(username, 0));
     }
@@ -47,6 +49,7 @@ public class Game {
         deck.reset();
         deck.shuffle();
         topCard = null;
+        cardsDrawn = 0;
     }
 
     public void setPlayerHand() {
@@ -92,6 +95,10 @@ public class Game {
     }
 
     public void drawCard() {
-        //TODO: implement
+        if (cardsDrawn == 3) {
+            return;
+        }
+        players.get(currentPlayer).getHand().add(deck.top());
+        cardsDrawn++;
     }
 }
