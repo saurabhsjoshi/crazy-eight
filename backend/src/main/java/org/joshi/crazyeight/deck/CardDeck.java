@@ -34,6 +34,10 @@ public class CardDeck {
         return cards.remove(cards.size() - 1);
     }
 
+    public int size() {
+        return cards.size();
+    }
+
     public boolean empty() {
         return cards.isEmpty();
     }

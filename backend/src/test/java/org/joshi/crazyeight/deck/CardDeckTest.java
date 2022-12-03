@@ -5,11 +5,12 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardDeckTest {
     @Test
-    public void testCardDeckShuffle() {
+    public void testShuffle() {
         List<Card> expectedCards = new ArrayList<>();
         for (var r : Rank.values()) {
             for (var s : Suit.values()) {
@@ -25,5 +26,13 @@ public class CardDeckTest {
         }
 
         assertTrue(expectedCards.isEmpty());
+    }
+
+    @Test
+    public void testSize() {
+        CardDeck deck = new CardDeck();
+        assertEquals(52, deck.size());
+        deck.top();
+        assertEquals(51, deck.size());
     }
 }
