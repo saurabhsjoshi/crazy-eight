@@ -151,7 +151,10 @@ public class Game {
                 topCard = turn.getDrawTwoCard();
             }
 
-            cardsToDraw = 0;
+            if (topCard.rank() != Rank.TWO) {
+                // Reset if the card played is not another two
+                cardsToDraw = 0;
+            }
         }
 
         switch (topCard.rank()) {
