@@ -3,6 +3,7 @@ package org.joshi.crazyeight.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.joshi.crazyeight.game.Game;
+import org.joshi.crazyeight.msg.HostMsg;
 import org.joshi.crazyeight.msg.PlayerListMsg;
 import org.joshi.crazyeight.msg.UserRegisterMsg;
 import org.springframework.lang.NonNull;
@@ -45,6 +46,12 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
 
     private void handleUserRegister(UserRegisterMsg registerMsg, WebSocketSession session) {
         String username = registerMsg.username;
+
+        if (game.getPlayers().isEmpty()) {
+            // This is the first player, inform them they are the host
+            sendMsg(session, new HostMsg());
+        }
+
         game.addPlayer(username);
         socketHandles.put(username, session);
         broadcastPlayerScores();
@@ -58,11 +65,15 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         }
 
         for (var handle : socketHandles.values()) {
-            try {
-                handle.sendMessage(new TextMessage(objectMapper.writeValueAsString(msg)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            sendMsg(handle, msg);
+        }
+    }
+
+    private <T extends Message> void sendMsg(WebSocketSession handle, T obj) {
+        try {
+            handle.sendMessage(new TextMessage(objectMapper.writeValueAsString(obj)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

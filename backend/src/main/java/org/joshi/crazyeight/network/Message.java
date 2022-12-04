@@ -2,6 +2,7 @@ package org.joshi.crazyeight.network;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.joshi.crazyeight.msg.HostMsg;
 import org.joshi.crazyeight.msg.PlayerListMsg;
 import org.joshi.crazyeight.msg.UserRegisterMsg;
 
@@ -11,7 +12,8 @@ import org.joshi.crazyeight.msg.UserRegisterMsg;
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = UserRegisterMsg.class, name = "UserRegister"),
-        @JsonSubTypes.Type(value = PlayerListMsg.class, name = "PlayerList")
+        @JsonSubTypes.Type(value = PlayerListMsg.class, name = "PlayerList"),
+        @JsonSubTypes.Type(value = HostMsg.class, name = "Host")
 })
 public abstract class Message {
 }
