@@ -9,6 +9,8 @@ import org.joshi.crazyeight.network.Message;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class StartTurnMsg extends Message {
+    private String username;
+
     private Integer cardsToDraw = 0;
 
     private Card topCard;
