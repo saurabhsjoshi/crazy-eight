@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row} from "react-bootstrap";
+import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 
 export function GameScreen(props: { username: string }) {
   const [socketUrl] = useState('ws://localhost:8080/api');
-  const {sendJsonMessage, readyState} = useWebSocket(socketUrl);
-
+  const {sendJsonMessage, lastMessage, readyState} = useWebSocket(socketUrl);
+  const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -38,6 +39,22 @@ export function GameScreen(props: { username: string }) {
   }, [readyState, registerState, RegistrationStatus.NOT_REGISTERED,
     RegistrationStatus.REGISTERED, sendJsonMessage, props.username]);
 
+  useEffect(() => {
+    if (lastMessage !== null) {
+      const data = JSON.parse(lastMessage.data);
+      if (data["type"] === "PlayerList") {
+        const p: PlayerScore[] = data["players"].map((item: any) => {
+          return {
+            username: item.username,
+            score: item.score
+          };
+        });
+        setPlayerScores(p);
+      }
+    }
+  }, [lastMessage]);
+
+
   return (
       <Container className="max-width">
         <Row>
@@ -52,6 +69,7 @@ export function GameScreen(props: { username: string }) {
         <Row>
           <h6 id="userRegisterLbl">User Registration: {registrationStatus}</h6>
         </Row>
+        <PlayerScoresTable playerScores={playerScores}/>
       </Container>
   )
 }

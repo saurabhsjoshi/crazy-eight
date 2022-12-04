@@ -20,7 +20,7 @@ export function Login(props: LoginProps) {
       <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
         <h1>Crazy Eights</h1>
         <p>Enter Username</p>
-        <input id="usernameTxt" type="text" onChange={onTextInput}/>
+        <input autoComplete="off" id="usernameTxt" type="text" onChange={onTextInput}/>
         <Button onClick={onSetUsername} id="startBtn" className="mt-3">Start</Button>
       </div>
   );
