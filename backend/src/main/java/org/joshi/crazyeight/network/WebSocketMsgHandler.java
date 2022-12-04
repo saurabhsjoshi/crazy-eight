@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.joshi.crazyeight.game.Game;
 import org.joshi.crazyeight.msg.HostMsg;
 import org.joshi.crazyeight.msg.PlayerListMsg;
+import org.joshi.crazyeight.msg.StartGameMsg;
 import org.joshi.crazyeight.msg.UserRegisterMsg;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketMsgHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private boolean gameStarted = false;
+
     private final ConcurrentHashMap<String, WebSocketSession> socketHandles = new ConcurrentHashMap<>();
 
     private final Game game;
@@ -32,16 +35,33 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionEstablished(@NonNull WebSocketSession session) {
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws IOException {
+        if (gameStarted) {
+            log.info("Game already started disconnecting user '{}'.", session.getId());
+            session.close();
+            return;
+        }
+
         log.info("New websocket connection '{}' established.", session.getId());
     }
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
         var msg = objectMapper.readValue(message.getPayload(), Message.class);
+
         if (msg instanceof UserRegisterMsg registerMsg) {
             handleUserRegister(registerMsg, session);
+            return;
         }
+
+        if (msg instanceof StartGameMsg startGameMsg) {
+            log.info("Received start game message from the host.");
+            handleStartGameMsg(startGameMsg);
+        }
+    }
+
+    private void handleStartGameMsg(StartGameMsg msg) {
+        gameStarted = true;
     }
 
     private void handleUserRegister(UserRegisterMsg registerMsg, WebSocketSession session) {
