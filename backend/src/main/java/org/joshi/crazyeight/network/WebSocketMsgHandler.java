@@ -3,10 +3,7 @@ package org.joshi.crazyeight.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.joshi.crazyeight.game.Game;
-import org.joshi.crazyeight.msg.HostMsg;
-import org.joshi.crazyeight.msg.PlayerListMsg;
-import org.joshi.crazyeight.msg.StartGameMsg;
-import org.joshi.crazyeight.msg.UserRegisterMsg;
+import org.joshi.crazyeight.msg.*;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -54,14 +51,15 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             return;
         }
 
-        if (msg instanceof StartGameMsg startGameMsg) {
+        if (msg instanceof StartGameMsg) {
             log.info("Received start game message from the host.");
-            handleStartGameMsg(startGameMsg);
+            handleStartGameMsg();
         }
     }
 
-    private void handleStartGameMsg(StartGameMsg msg) {
+    private void handleStartGameMsg() {
         gameStarted = true;
+        sendStartRoundMsg();
     }
 
     private void handleUserRegister(UserRegisterMsg registerMsg, WebSocketSession session) {
@@ -87,6 +85,19 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         for (var handle : socketHandles.values()) {
             sendMsg(handle, msg);
         }
+    }
+
+    private void sendStartRoundMsg() {
+        game.resetRound();
+        game.setPlayerHand();
+        for (var p : game.getPlayers()) {
+            sendMsg(p.getUsername(), new StartRoundMsg(p.getHand()));
+        }
+        log.info("Sent start round message to '{}' players.", game.getPlayers().size());
+    }
+
+    private <T extends Message> void sendMsg(String username, T obj) {
+        sendMsg(socketHandles.get(username), obj);
     }
 
     private <T extends Message> void sendMsg(WebSocketSession handle, T obj) {
