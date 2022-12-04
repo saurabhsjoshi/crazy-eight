@@ -3,6 +3,7 @@ import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
+import PlayerHand, {Card, Rank, Suit} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
@@ -10,6 +11,7 @@ export function GameScreen(props: { username: string }) {
   const [socketUrl] = useState('ws://localhost:8080/api');
   const {sendJsonMessage, lastMessage, readyState} = useWebSocket(socketUrl);
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
+  const [playerHand, setPlayerHand] = useState<Card[]>([]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -60,6 +62,19 @@ export function GameScreen(props: { username: string }) {
       if (data["type"] === "Host") {
         setHost(true);
       }
+
+      if(data["type"] === "StartRound") {
+        const cards : Card[] = data["cards"]
+            .map((c: any) => {
+              return {
+                suit: Suit[c.suit],
+                rank: Rank[c.rank]
+              };
+            });
+        setPlayerHand(cards);
+        setGameStarted(true);
+      }
+
     }
   }, [lastMessage]);
 
@@ -67,7 +82,6 @@ export function GameScreen(props: { username: string }) {
     sendJsonMessage({
       "type": "StartGame"
     });
-    setGameStarted(true);
   }
 
   return (
@@ -90,10 +104,15 @@ export function GameScreen(props: { username: string }) {
               isHost &&
               !gameStarted &&
               <Button onClick={onStartGame}
-                      disabled={playerScores.length < 3} id="startGameBtn"
+                      disabled={playerScores.length < 2} id="startGameBtn"
                       className="btn btn-primary">Start Game</Button>
           }
         </Container>
+
+        {
+            gameStarted &&
+            <PlayerHand myTurn={false} hand={playerHand}/>
+        }
       </Container>
   )
 }
