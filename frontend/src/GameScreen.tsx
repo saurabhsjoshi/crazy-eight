@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import PlayerHand, {Card, Rank, Suit, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
-  const [myTurn, setMyTurn] = useState<Turn | null>(null);
+  const [turnInfo, setTurnInfo] = useState<Turn | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [isHost, setHost] = useState<boolean>(false);
   const [socketUrl] = useState('ws://localhost:8080/api');
@@ -88,9 +88,10 @@ export function GameScreen(props: { username: string }) {
           rank: Rank[data["topCard"].rank as keyof typeof Rank]
         }
 
-        setMyTurn({
+        setTurnInfo({
           topCard: card,
-          cardsToDraw: data["cardsToDraw"] as number
+          cardsToDraw: data["cardsToDraw"] as number,
+          username: data["username"] as string
         });
         return;
       }
@@ -117,6 +118,9 @@ export function GameScreen(props: { username: string }) {
         <Row>
           <h6 id="userRegisterLbl">User Registration: {registrationStatus}</h6>
         </Row>
+        <Row>
+          {turnInfo !== null && <h6 id="currentTurn">Current Turn: {turnInfo?.username}</h6>}
+        </Row>
         <PlayerScoresTable playerScores={playerScores}/>
         <Container>
           {
@@ -129,8 +133,8 @@ export function GameScreen(props: { username: string }) {
         </Container>
 
         {
-            gameStarted &&
-            <PlayerHand hand={playerHand} turn={myTurn}/>
+            gameStarted && turnInfo !== null &&
+            <PlayerHand username={props.username} hand={playerHand} turnInfo={turnInfo}/>
         }
       </Container>
   )

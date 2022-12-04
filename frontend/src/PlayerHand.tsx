@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 export interface Turn {
   topCard: Card
   cardsToDraw: number
+  username: string
 }
 
 export enum Suit {
@@ -34,9 +35,14 @@ export interface Card {
   rank: Rank;
 }
 
-function toText(c: Card): string {
+function toText(c: Card | undefined): string {
+
   let s: string = "";
   let r: string = "";
+
+  if(c == null) {
+    return r + s;
+  }
 
   switch (c.rank) {
     case Rank.ACE: {
@@ -111,24 +117,24 @@ function toText(c: Card): string {
   return r + s;
 }
 
-function PlayerHand(props: { hand: Card[], turn: Turn | null }) {
+function PlayerHand(props: { username: string, hand: Card[], turnInfo: Turn | null}) {
   return (
-      <Container>
+      <Container className="mt-4">
         <Row>
-          <h6>Your Hand</h6>
+          <h5>Your Hand</h5>
         </Row>
         <div className="btn-group" role="group">
           {
             props.hand.map(c => toText(c))
                 .map(c =>
-                    <Button disabled={props.turn !== null} className="btn">
+                    <Button disabled={props.username !== props.turnInfo?.username} className="btn">
                       {c}
                     </Button>
                 )
           }
         </div>
-        <Row>
-
+        <Row className="align-items-center align-content-center mt-3">
+            <h5>Top Card {toText(props.turnInfo?.topCard)}</h5>
         </Row>
       </Container>
   );
