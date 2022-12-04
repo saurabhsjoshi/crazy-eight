@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -95,6 +94,10 @@ public class UiTests {
         var registerState = TestUtilities.getUserRegisterLbl(driver);
         new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.textToBePresentInElement(registerState, "User Registration: Registered"));
+
+        var userScoreLbl = TestUtilities.getUserScoreLbl(driver, "Player1");
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.textToBePresentInElement(userScoreLbl, "0"));
 
         driver.quit();
     }

@@ -37,6 +37,10 @@ public class TestUtilities {
         return getById(driver, "userRegisterLbl");
     }
 
+    public static WebElement getUserScoreLbl(WebDriver driver, String username) {
+        return getById(driver, "scoreLbl_" + username);
+    }
+
     public static WebElement getUsernameLbl(WebDriver driver) {
         return new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("usernameLbl")));
