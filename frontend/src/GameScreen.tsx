@@ -5,7 +5,7 @@ import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
 
 export function GameScreen(props: { username: string }) {
-
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [isHost, setHost] = useState<boolean>(false);
   const [socketUrl] = useState('ws://localhost:8080/api');
   const {sendJsonMessage, lastMessage, readyState} = useWebSocket(socketUrl);
@@ -57,12 +57,18 @@ export function GameScreen(props: { username: string }) {
       }
 
       // We are the host
-      if(data["type"] === "Host") {
+      if (data["type"] === "Host") {
         setHost(true);
       }
     }
   }, [lastMessage]);
 
+  const onStartGame = () => {
+    sendJsonMessage({
+      "type": "StartGame"
+    });
+    setGameStarted(true);
+  }
 
   return (
       <Container className="max-width">
@@ -81,7 +87,11 @@ export function GameScreen(props: { username: string }) {
         <PlayerScoresTable playerScores={playerScores}/>
         <Container>
           {
-            isHost && <Button disabled={playerScores.length < 3} id="startGameBtn" className="btn btn-primary">Start Game</Button>
+              isHost &&
+              !gameStarted &&
+              <Button onClick={onStartGame}
+                      disabled={playerScores.length < 3} id="startGameBtn"
+                      className="btn btn-primary">Start Game</Button>
           }
         </Container>
       </Container>
