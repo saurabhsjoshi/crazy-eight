@@ -41,6 +41,10 @@ public class TestUtilities {
         return getById(driver, "scoreLbl_" + username);
     }
 
+    public static WebElement getStartGameBtn(WebDriver driver) {
+        return getById(driver, "startGameBtn");
+    }
+
     public static WebElement getUsernameLbl(WebDriver driver) {
         return new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("usernameLbl")));

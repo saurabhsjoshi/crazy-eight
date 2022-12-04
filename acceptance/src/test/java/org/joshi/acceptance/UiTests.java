@@ -99,6 +99,10 @@ public class UiTests {
         new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.textToBePresentInElement(userScoreLbl, "0"));
 
+
+        var startGameBtn = TestUtilities.getStartGameBtn(driver);
+        assertEquals("true", startGameBtn.getAttribute("disabled"));
+
         driver.quit();
     }
 }
