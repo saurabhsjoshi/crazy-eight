@@ -3,12 +3,7 @@ import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
-import PlayerHand, {Card, Rank, Suit} from "./PlayerHand";
-
-interface Turn {
-  topCard: Card
-  cardsToDraw: number
-}
+import PlayerHand, {Card, Rank, Suit, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
   const [myTurn, setMyTurn] = useState<Turn | null>(null);
@@ -135,7 +130,7 @@ export function GameScreen(props: { username: string }) {
 
         {
             gameStarted &&
-            <PlayerHand myTurn={myTurn !== null} hand={playerHand}/>
+            <PlayerHand hand={playerHand} turn={myTurn}/>
         }
       </Container>
   )

@@ -1,5 +1,10 @@
-import {Col, Container, Row} from "react-bootstrap";
+import {Container, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+
+export interface Turn {
+  topCard: Card
+  cardsToDraw: number
+}
 
 export enum Suit {
   CLUBS,
@@ -106,25 +111,24 @@ function toText(c: Card): string {
   return r + s;
 }
 
-function PlayerHand(props: { hand: Card[], myTurn: boolean }) {
+function PlayerHand(props: { hand: Card[], turn: Turn | null }) {
   return (
       <Container>
         <Row>
           <h6>Your Hand</h6>
         </Row>
-        <Row>
+        <div className="btn-group" role="group">
           {
             props.hand.map(c => toText(c))
                 .map(c =>
-                    <Col>
-                      <Button disabled={!props.myTurn} className="btn">
-                        {c}
-                      </Button>
-                    </Col>
+                    <Button disabled={props.turn !== null} className="btn">
+                      {c}
+                    </Button>
                 )
           }
-        </Row>
+        </div>
         <Row>
+
         </Row>
       </Container>
   );
