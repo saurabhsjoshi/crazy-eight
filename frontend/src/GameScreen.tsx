@@ -2,8 +2,11 @@ import React, {useEffect, useState} from "react";
 import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
+import Button from "react-bootstrap/Button";
 
 export function GameScreen(props: { username: string }) {
+
+  const [isHost, setHost] = useState<boolean>(false);
   const [socketUrl] = useState('ws://localhost:8080/api');
   const {sendJsonMessage, lastMessage, readyState} = useWebSocket(socketUrl);
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
@@ -50,6 +53,12 @@ export function GameScreen(props: { username: string }) {
           };
         });
         setPlayerScores(p);
+        return;
+      }
+
+      // We are the host
+      if(data["type"] === "Host") {
+        setHost(true);
       }
     }
   }, [lastMessage]);
@@ -70,6 +79,11 @@ export function GameScreen(props: { username: string }) {
           <h6 id="userRegisterLbl">User Registration: {registrationStatus}</h6>
         </Row>
         <PlayerScoresTable playerScores={playerScores}/>
+        <Container>
+          {
+            isHost && <Button disabled={playerScores.length < 3} id="startGameBtn" className="btn btn-primary">Start Game</Button>
+          }
+        </Container>
       </Container>
   )
 }
