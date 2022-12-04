@@ -94,6 +94,18 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             sendMsg(p.getUsername(), new StartRoundMsg(p.getHand()));
         }
         log.info("Sent start round message to '{}' players.", game.getPlayers().size());
+        game.setTopCard();
+
+        startTurn();
+    }
+
+    public void startTurn() {
+        String nextPlayer = game.nextTurn();
+        StartTurnMsg msg = new StartTurnMsg();
+        msg.setCardsToDraw(game.getCardsToDraw());
+        msg.setTopCard(game.getTopCard());
+        log.info("Starting turn for player '{}'", nextPlayer);
+        sendMsg(nextPlayer, msg);
     }
 
     private <T extends Message> void sendMsg(String username, T obj) {
