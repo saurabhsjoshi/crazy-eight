@@ -5,7 +5,13 @@ import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
 import PlayerHand, {Card, Rank, Suit} from "./PlayerHand";
 
+interface Turn {
+  topCard: Card
+  cardsToDraw: number
+}
+
 export function GameScreen(props: { username: string }) {
+  const [myTurn, setMyTurn] = useState<Turn | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [isHost, setHost] = useState<boolean>(false);
   const [socketUrl] = useState('ws://localhost:8080/api');
@@ -47,7 +53,9 @@ export function GameScreen(props: { username: string }) {
   useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
-      if (data["type"] === "PlayerList") {
+      const type = data["type"];
+
+      if (type === "PlayerList") {
         const p: PlayerScore[] = data["players"].map((item: any) => {
           return {
             username: item.username,
@@ -59,22 +67,38 @@ export function GameScreen(props: { username: string }) {
       }
 
       // We are the host
-      if (data["type"] === "Host") {
+      if (type === "Host") {
         setHost(true);
+        return;
       }
 
-      if(data["type"] === "StartRound") {
-        const cards : Card[] = data["cards"]
+      if (type === "StartRound") {
+        const cards: Card[] = data["cards"]
             .map((c: any) => {
               return {
-                suit: Suit[c.suit],
-                rank: Rank[c.rank]
+                suit: Suit[c.suit as keyof typeof Suit],
+                rank: Rank[c.rank as keyof typeof Rank]
               };
             });
         setPlayerHand(cards);
         setGameStarted(true);
+        return;
       }
 
+      if (type === "StartTurn") {
+        console.log("Starting turn for this player.");
+
+        let card: Card = {
+          suit: Suit[data["topCard"].suit as keyof typeof Suit],
+          rank: Rank[data["topCard"].rank as keyof typeof Rank]
+        }
+
+        setMyTurn({
+          topCard: card,
+          cardsToDraw: data["cardsToDraw"] as number
+        });
+        return;
+      }
     }
   }, [lastMessage]);
 
@@ -111,7 +135,7 @@ export function GameScreen(props: { username: string }) {
 
         {
             gameStarted &&
-            <PlayerHand myTurn={false} hand={playerHand}/>
+            <PlayerHand myTurn={myTurn !== null} hand={playerHand}/>
         }
       </Container>
   )
