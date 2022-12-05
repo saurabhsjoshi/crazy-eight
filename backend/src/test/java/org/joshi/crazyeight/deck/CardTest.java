@@ -19,5 +19,9 @@ public class CardTest {
         var card = Card.fromText("1H");
         Assertions.assertEquals(Rank.ACE, card.rank());
         Assertions.assertEquals(Suit.HEART, card.suit());
+
+        card = Card.fromText("10S");
+        Assertions.assertEquals(Rank.TEN, card.rank());
+        Assertions.assertEquals(Suit.SPADES, card.suit());
     }
 }
