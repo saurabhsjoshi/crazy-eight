@@ -145,9 +145,12 @@ public class Game {
     }
 
     public String completeTurn(CompleteTurn turn) {
-        players.get(currentPlayer).removeCard(turn.getCard());
-        
-        topCard = turn.getCard();
+
+        // Player passed
+        if (turn.getCard() != null) {
+            players.get(currentPlayer).removeCard(turn.getCard());
+            topCard = turn.getCard();
+        }
         cardsDrawn = 0;
 
         if (cardsToDraw != 0) {
