@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from "react";
 import useWebSocket, {ReadyState} from "react-use-websocket";
-import {Container, Row} from "react-bootstrap";
+import {Container, Row, Toast} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
 import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
+  const [showSkippedMsg, setSkippedMsg] = useState(false);
+  const toggleShowSkipped = () => setSkippedMsg(!showSkippedMsg);
+
   const [turnInfo, setTurnInfo] = useState<Turn | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [isHost, setHost] = useState<boolean>(false);
@@ -107,6 +110,10 @@ export function GameScreen(props: { username: string }) {
         setPlayerHand(cards);
         return;
       }
+
+      if(type === "PlayerSkipped") {
+        setSkippedMsg(true);
+      }
     }
   }, [lastMessage]);
 
@@ -194,6 +201,13 @@ export function GameScreen(props: { username: string }) {
             <PlayerHand drawCardClicked={onDrawClicked} cardClicked={onCardClicked} username={props.username}
                         hand={playerHand} turnInfo={turnInfo}/>
         }
+
+        <Toast id="skippedToast" show={showSkippedMsg} delay={5000} autohide onClose={toggleShowSkipped}>
+          <Toast.Header>
+            <strong className="me-auto">Skipped!</strong>
+          </Toast.Header>
+          <Toast.Body>Previous player has played a Queen skipping your turn!</Toast.Body>
+        </Toast>
       </Container>
   )
 }
