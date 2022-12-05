@@ -8,7 +8,8 @@ export interface Turn {
   username: string
   error: string | undefined
 
-  cardsDrawn: number
+  cardsDrawn: number,
+  extraCard: Card | undefined
 }
 
 export type onCardClick = (e: React.MouseEvent<HTMLElement>) => void;
@@ -42,7 +43,7 @@ export interface Card {
   rank: Rank;
 }
 
-function toText(c: Card | undefined): string {
+export function toText(c: Card | undefined): string {
 
   let s: string = "";
   let r: string = "";
@@ -166,6 +167,19 @@ function PlayerHand(props: {
               End Round
             </Button>
           </div>
+
+          {
+              props.turnInfo?.extraCard?.rank === Rank.EIGHT &&
+
+              <div id="suitsBtnGrp" className="btn-group btn-group mt-4" role="group">
+                  <Button id="SuitsClubsBtn" onClick={props.cardClicked}>CLUBS</Button>
+                  <Button id="SuitsDiamondsBtn" onClick={props.cardClicked}>DIAMONDS</Button>
+                  <Button id="SuitsHearsBtn" onClick={props.cardClicked}>HEART</Button>
+                  <Button id="SuitsSpadesBtn" onClick={props.cardClicked}>SPADES</Button>
+              </div>
+          }
+
+
         </Row>
 
         <Row className="align-items-center align-content-center mt-3">
