@@ -118,7 +118,7 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         game.setTopCard();
 
         game.setCurrentPlayer(overallPlayer - 1);
-        overallPlayer++;
+        updateOverallPlayer();
         startTurn(game.nextTurn());
     }
 
@@ -149,8 +149,10 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
 
             // Update scores
             for (var p : game.getPlayers()) {
-                p.setScore(Game.getScore(p.getHand()));
+                p.setScore(p.getScore() + Game.getScore(p.getHand()));
             }
+
+            broadcastRoundWinnerMsg(result.getRoundWinner());
             broadcastPlayerScores();
             //TODO: Handle overall winner
             sendStartRoundMsg();
@@ -174,6 +176,14 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         sendMsg(player.getUsername(), new UpdateHandMsg(player.getHand()));
     }
 
+    private void broadcastRoundWinnerMsg(String winner) {
+        var msg = new RoundWinnerMsg();
+        msg.setUsername(winner);
+        for (var handle : socketHandles.values()) {
+            sendMsg(handle, msg);
+        }
+    }
+
     private <T extends Message> void sendMsg(String username, T obj) {
         sendMsg(socketHandles.get(username), obj);
     }
@@ -183,6 +193,14 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             handle.sendMessage(new TextMessage(objectMapper.writeValueAsString(obj)));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void updateOverallPlayer() {
+        overallPlayer++;
+
+        if (overallPlayer == game.getPlayers().size()) {
+            overallPlayer = 0;
         }
     }
 
