@@ -135,9 +135,11 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
     }
 
     public void handleCompleteTurn(CompleteTurnMsg msg) {
-        // TODO: Handle if player has draw two.
         var currentPlayer = game.getCurrentPlayer();
+
         var completeTurn = new CompleteTurn(Card.fromText(msg.getCard()));
+        completeTurn.setDrawTwoCard(Card.fromText(msg.getAdditionalCard()));
+        completeTurn.setSuit(msg.getSuit());
 
         log.info("Completing turn for user '{}' who played card '{}'.",
                 game.getPlayers().get(currentPlayer).getUsername(),
@@ -154,7 +156,11 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
 
             broadcastRoundWinnerMsg(result.getRoundWinner());
             broadcastPlayerScores();
-            //TODO: Handle overall winner
+
+            if (hasOverallWinner()) {
+                return;
+            }
+
             sendStartRoundMsg();
             return;
         }
@@ -182,6 +188,40 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         for (var handle : socketHandles.values()) {
             sendMsg(handle, msg);
         }
+    }
+
+    private boolean hasOverallWinner() {
+        int low = Integer.MAX_VALUE;
+        String winner = "";
+        boolean gameEnded = false;
+
+        for (var p : game.getPlayers()) {
+            int score = p.getScore();
+            if (score >= 100) {
+                gameEnded = true;
+            }
+
+            if (score < low) {
+                low = score;
+                winner = p.getUsername();
+            }
+        }
+        if (gameEnded) {
+            var msg = new GameWinnerMsg();
+            msg.setUsername(winner);
+            for (var handle : socketHandles.values()) {
+                sendMsg(handle, msg);
+            }
+
+            for (var h : socketHandles.values()) {
+                try {
+                    h.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return gameEnded;
     }
 
     private <T extends Message> void sendMsg(String username, T obj) {
