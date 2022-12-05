@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row, Toast} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
@@ -205,6 +205,19 @@ export function GameScreen(props: { username: string }) {
     });
   }
 
+  let riggedValue: string = "";
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    riggedValue = e.target.value;
+  };
+  const onRigInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      sendJsonMessage({
+        "type": "RigRound",
+        "riggedCards": riggedValue
+      });
+    }
+  }
+
   return (
       <Container className="max-width">
         <Row>
@@ -237,6 +250,13 @@ export function GameScreen(props: { username: string }) {
             gameStarted && turnInfo !== null &&
             <PlayerHand drawCardClicked={onDrawClicked} cardClicked={onCardClicked} username={props.username}
                         hand={playerHand} turnInfo={turnInfo}/>
+        }
+
+        {
+            isHost &&
+            <Row className="mt-4">
+                <input autoComplete="off" id="rigTxt" type="" onChange={onChange} onKeyDown={onRigInput}/>
+            </Row>
         }
 
         <Toast id="skippedToast" show={showSkippedMsg} delay={5000} autohide onClose={toggleShowSkipped}>
