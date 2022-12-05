@@ -63,6 +63,17 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             log.info("Received complete turn message.");
             handleCompleteTurn(completeTurnMsg);
         }
+
+        if (msg instanceof DrawCardMsg) {
+            log.info("Received draw card message.");
+            handleDrawCard();
+        }
+    }
+
+    private void handleDrawCard() {
+        game.drawCard();
+        var player = game.getPlayers().get(game.getCurrentPlayer());
+        sendMsg(player.getUsername(), new UpdateHandMsg(player.getHand()));
     }
 
     private void handleStartGameMsg() {
