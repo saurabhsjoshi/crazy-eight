@@ -123,6 +123,15 @@ export function GameScreen(props: { username: string }) {
       }
 
       const btn = e.target as HTMLInputElement;
+
+      if(btn.id === "passBtn") {
+        // Player has passed this round
+        sendJsonMessage({
+          "type": "CompleteTurn"
+        });
+        return {...currentState, username: ""};
+      }
+
       let cardPlayed = playerHand[Number(btn.getAttribute("data-idx"))];
 
       if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.topCard.suit) {

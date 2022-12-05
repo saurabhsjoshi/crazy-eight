@@ -162,7 +162,7 @@ function PlayerHand(props: {
                 id="passBtn"
                 onClick={props.cardClicked}
                 className="btn btn-danger"
-                hidden={(props.username !== props.turnInfo?.username) || props.turnInfo.cardsDrawn < 3}>
+                disabled={(props.username !== props.turnInfo?.username) || props.turnInfo.cardsDrawn < 3}>
               End Round
             </Button>
           </div>
