@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row, Toast} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
@@ -23,6 +23,9 @@ export function GameScreen(props: { username: string }) {
 
   const [showSkippedMsg, setSkippedMsg] = useState(false);
   const toggleShowSkipped = () => setSkippedMsg(!showSkippedMsg);
+
+  const [showDrawMsg, setShowDrawMsg] = useState(false);
+  const toggleShowDrawMsg = () => setShowDrawMsg(!showDrawMsg);
 
   const [turnInfo, setTurnInfo] = useState<Turn | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
@@ -104,9 +107,15 @@ export function GameScreen(props: { username: string }) {
           rank: Rank[data["topCard"].rank as keyof typeof Rank]
         }
 
+        let toDraw = data["cardsToDraw"] as number;
+
+        if (toDraw !== 0 && turnInfo?.username === props.username) {
+          setShowDrawMsg(true);
+        }
+
         setTurnInfo({
           topCard: card,
-          cardsToDraw: data["cardsToDraw"] as number,
+          cardsToDraw: toDraw,
           username: data["username"] as string,
           error: undefined,
           cardsDrawn: 0
@@ -152,7 +161,7 @@ export function GameScreen(props: { username: string }) {
         return;
       }
     }
-  }, [lastMessage]);
+  }, [lastMessage, props.username, turnInfo?.username]);
 
   const onStartGame = () => {
     sendJsonMessage({
@@ -188,6 +197,7 @@ export function GameScreen(props: { username: string }) {
       }
 
       console.log("Invalid card");
+
       return {...currentState, error: "Invalid card"};
     });
   };
@@ -197,11 +207,21 @@ export function GameScreen(props: { username: string }) {
       if (!currentState) {
         return currentState;
       }
-      return {...currentState, cardsDrawn: currentState.cardsDrawn + 1};
-    });
 
-    sendJsonMessage({
-      "type": "DrawCard",
+      if (currentState.cardsToDraw !== 0) {
+        sendJsonMessage({
+          "type": "DrawCard",
+          "num": currentState.cardsToDraw
+        });
+        setShowDrawMsg(false);
+        return {...currentState, cardsToDraw: 0}
+      }
+
+      sendJsonMessage({
+        "type": "DrawCard",
+      });
+
+      return {...currentState, cardsDrawn: currentState.cardsDrawn + 1};
     });
   }
 
@@ -271,6 +291,13 @@ export function GameScreen(props: { username: string }) {
             <strong className="me-auto">Winner!</strong>
           </Toast.Header>
           <Toast.Body>{roundWinnerMsg.winner}</Toast.Body>
+        </Toast>
+
+        <Toast id="drawCardsToast" show={showDrawMsg} delay={5000} autohide onClose={toggleShowDrawMsg}>
+          <Toast.Header>
+            <strong className="me-auto">You need to draw cards!</strong>
+          </Toast.Header>
+          <Toast.Body>The previous player has given you a {turnInfo?.cardsToDraw}!</Toast.Body>
         </Toast>
       </Container>
   )
