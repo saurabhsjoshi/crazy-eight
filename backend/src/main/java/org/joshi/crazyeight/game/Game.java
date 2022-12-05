@@ -154,6 +154,11 @@ public class Game {
             topCard = turn.getCard();
         }
 
+        if (players.get(currentPlayer).getHand().isEmpty()) {
+            result.setRoundWinner(players.get(currentPlayer).getUsername());
+            return result;
+        }
+
         cardsDrawn = 0;
 
         if (cardsToDraw != 0) {
