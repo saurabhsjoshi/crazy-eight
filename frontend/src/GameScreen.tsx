@@ -91,7 +91,8 @@ export function GameScreen(props: { username: string }) {
         setTurnInfo({
           topCard: card,
           cardsToDraw: data["cardsToDraw"] as number,
-          username: data["username"] as string
+          username: data["username"] as string,
+          error: undefined
         });
         return;
       }
@@ -105,9 +106,22 @@ export function GameScreen(props: { username: string }) {
   }
 
   const onCardClicked: onCardClick = (e) => {
-    if (turnInfo) {
-      setTurnInfo({...turnInfo, username: ""});
-    }
+    setTurnInfo(currentState => {
+      if(!currentState) {
+        return currentState;
+      }
+
+      const btn = e.target as HTMLInputElement;
+      let cardPlayed = playerHand[Number(btn.getAttribute("data-idx"))];
+
+      if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.topCard.suit) {
+        console.log("Correct card");
+        return {...currentState, username: ""};
+      }
+
+      console.log("Invalid card");
+      return {...currentState, error: "Invalid card"};
+    });
   };
 
   return (

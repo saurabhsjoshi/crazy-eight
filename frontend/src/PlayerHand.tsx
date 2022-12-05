@@ -6,7 +6,9 @@ export interface Turn {
   topCard: Card
   cardsToDraw: number
   username: string
+  error: string | undefined
 }
+
 export type onCardClick = (e: React.MouseEvent<HTMLElement>) => void;
 
 export enum Suit {
@@ -17,6 +19,7 @@ export enum Suit {
 }
 
 export enum Rank {
+  ACE,
   TWO,
   THREE,
   FOUR,
@@ -28,8 +31,7 @@ export enum Rank {
   TEN,
   JACK,
   QUEEN,
-  KING,
-  ACE
+  KING
 }
 
 export interface Card {
@@ -124,7 +126,6 @@ function PlayerHand(props: {
   turnInfo: Turn | null,
   cardClicked: onCardClick
 }) {
-
   return (
       <Container className="mt-4">
         <Row>
@@ -133,8 +134,11 @@ function PlayerHand(props: {
         <div id="playerHandBtnGrp" className="btn-group btn-group-lg" role="group">
           {
             props.hand.map(c => toText(c))
-                .map(c =>
-                    <Button onClick={props.cardClicked} id={c} disabled={props.username !== props.turnInfo?.username}
+                .map((c, index) =>
+                    <Button onClick={props.cardClicked}
+                            key={c}
+                            data-idx={index}
+                            disabled={props.username !== props.turnInfo?.username}
                             className="btn">
                       {c}
                     </Button>
