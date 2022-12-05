@@ -3,7 +3,6 @@ package org.joshi.crazyeight.game;
 import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.Rank;
 import org.joshi.crazyeight.deck.Suit;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -173,7 +172,7 @@ public class GameTest {
         var nextPlayer = game.completeTurn(completeTurn);
 
         assertEquals(playedCard, game.getTopCard());
-        assertEquals("testUser2", nextPlayer);
+        assertEquals("testUser2", nextPlayer.getNextPlayer());
     }
 
     @Test
@@ -193,8 +192,8 @@ public class GameTest {
         game.completeTurn(new CompleteTurn(new Card(Suit.HEART, Rank.FOUR)));
 
         var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.ACE)));
-
-        assertEquals("testUser1", nextPlayer);
+        assertEquals(-1, nextPlayer.getDirection());
+        assertEquals("testUser1", nextPlayer.getNextPlayer());
     }
 
     @Test
@@ -214,8 +213,8 @@ public class GameTest {
         game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.FOUR)));
 
         var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.QUEEN)));
-
-        assertEquals("testUser4", nextPlayer);
+        assertEquals("testUser3", nextPlayer.getSkippedPlayer());
+        assertEquals("testUser4", nextPlayer.getNextPlayer());
     }
 
     @Test
@@ -236,7 +235,7 @@ public class GameTest {
 
         var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.TWO)));
 
-        assertEquals("testUser3", nextPlayer);
+        assertEquals("testUser3", nextPlayer.getNextPlayer());
         assertEquals(2, game.getCardsToDraw());
 
         game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.SEVEN)));
@@ -262,7 +261,7 @@ public class GameTest {
         game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.TWO)));
         var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.HEART, Rank.TWO)));
 
-        assertEquals("testUser4", nextPlayer);
+        assertEquals("testUser4", nextPlayer.getNextPlayer());
         assertEquals(4, game.getCardsToDraw());
     }
 
@@ -283,7 +282,7 @@ public class GameTest {
         game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.FOUR)));
         var nextPlayer = game.completeTurn(new CompleteTurn(new Card(Suit.DIAMONDS, Rank.TWO)));
 
-        assertEquals("testUser3", nextPlayer);
+        assertEquals("testUser3", nextPlayer.getNextPlayer());
         assertEquals(2, game.getCardsToDraw());
 
         game.drawCards();
