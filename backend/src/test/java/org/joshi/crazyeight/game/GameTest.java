@@ -289,4 +289,24 @@ public class GameTest {
 
         assertEquals(7, game.getPlayers().get(2).getHand().size());
     }
+
+    @Test
+    void testWinner() {
+        addFourPlayers();
+        game.setPlayerHand();
+        game.setTopCard();
+
+        assertEquals("testUser1", game.nextTurn());
+        List<String> riggedCards = List.of(
+                "4H",
+                "4S QD KC 8H 2D",
+                "9S 6C 9C JD 3H",
+                "7D JH QH KH 5C"
+        );
+        game.rigRound("4D", riggedCards);
+
+        var result = game.completeTurn(new CompleteTurn(new Card(Suit.HEART, Rank.FOUR)));
+
+        assertEquals("testUser1", result.getRoundWinner());
+    }
 }

@@ -12,4 +12,6 @@ public class TurnResult {
     private String nextPlayer = "";
 
     private String winner = "";
+
+    private String roundWinner = "";
 }
