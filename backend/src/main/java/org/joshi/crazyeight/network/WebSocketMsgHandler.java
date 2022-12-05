@@ -2,6 +2,8 @@ package org.joshi.crazyeight.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.joshi.crazyeight.deck.Card;
+import org.joshi.crazyeight.game.CompleteTurn;
 import org.joshi.crazyeight.game.Game;
 import org.joshi.crazyeight.msg.*;
 import org.springframework.lang.NonNull;
@@ -54,6 +56,12 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         if (msg instanceof StartGameMsg) {
             log.info("Received start game message from the host.");
             handleStartGameMsg();
+            return;
+        }
+
+        if (msg instanceof CompleteTurnMsg completeTurnMsg) {
+            log.info("Received complete turn message.");
+            handleCompleteTurn(completeTurnMsg);
         }
     }
 
@@ -96,20 +104,35 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         log.info("Sent start round message to '{}' players.", game.getPlayers().size());
         game.setTopCard();
 
-        startTurn();
+        startTurn(game.nextTurn());
     }
 
-    public void startTurn() {
-        String nextPlayer = game.nextTurn();
+    public void startTurn(String nextPlayer) {
         StartTurnMsg msg = new StartTurnMsg();
         msg.setUsername(nextPlayer);
         msg.setCardsToDraw(game.getCardsToDraw());
         msg.setTopCard(game.getTopCard());
-        log.info("Starting turn for player '{}'", nextPlayer);
+        log.info("Starting turn for player '{}' with top card '{}'.", nextPlayer, msg.getTopCard());
 
         for (var p : game.getPlayers()) {
             sendMsg(p.getUsername(), msg);
         }
+    }
+
+    public void handleCompleteTurn(CompleteTurnMsg msg) {
+        // TODO: Handle if player has won or draw two or skip etc.
+        var currentPlayer = game.getCurrentPlayer();
+        var completeTurn = new CompleteTurn(Card.fromText(msg.getCard()));
+
+        log.info("Completing turn for user '{}' who played card '{}'.",
+                game.getPlayers().get(currentPlayer).getUsername(),
+                completeTurn.getCard());
+
+        startTurn(game.completeTurn(completeTurn));
+
+        var player = game.getPlayers().get(currentPlayer);
+        log.info("Sending update hand message to player '{}'.", player.getUsername());
+        sendMsg(player.getUsername(), new UpdateHandMsg(player.getHand()));
     }
 
     private <T extends Message> void sendMsg(String username, T obj) {
