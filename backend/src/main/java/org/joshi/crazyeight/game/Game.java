@@ -187,6 +187,30 @@ public class Game {
         return result;
     }
 
+    public static Integer getScore(List<Card> cards) {
+        if (cards.isEmpty()) {
+            return 0;
+        }
+        int score = 0;
+
+        for (var c : cards) {
+            score += switch (c.rank()) {
+                case TWO -> 2;
+                case THREE -> 3;
+                case FOUR -> 4;
+                case FIVE -> 5;
+                case SIX -> 8;
+                case SEVEN -> 7;
+                case EIGHT -> 50;
+                case NINE -> 9;
+                case TEN, JACK, QUEEN, KING -> 10;
+                case ACE -> 1;
+            };
+        }
+
+        return score;
+    }
+
     public int getCurrentPlayer() {
         return currentPlayer;
     }
