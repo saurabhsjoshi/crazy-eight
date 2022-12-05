@@ -171,6 +171,10 @@ public class Game {
         return nextTurn();
     }
 
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public int getCardsToDraw() {
         return cardsToDraw;
     }
