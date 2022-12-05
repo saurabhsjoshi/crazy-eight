@@ -7,6 +7,20 @@ import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, Turn} from "
 
 export function GameScreen(props: { username: string }) {
   const [directionOfPlay, setDirectionOfPlay] = useState<number>(1);
+
+  const [roundWinnerMsg, setRoundWinnerMsg] = useState({
+    winner: "",
+    show: false
+  });
+
+  const toggleRounderWinner = () => setRoundWinnerMsg(prevState => {
+        return {
+          winner: "",
+          show: !prevState.winner
+        }
+      }
+  );
+
   const [showSkippedMsg, setSkippedMsg] = useState(false);
   const toggleShowSkipped = () => setSkippedMsg(!showSkippedMsg);
 
@@ -119,6 +133,14 @@ export function GameScreen(props: { username: string }) {
 
       if (type === "DirectionChange") {
         setDirectionOfPlay(data["direction"] as number);
+        return;
+      }
+
+      if (type === "RoundWinner") {
+        setRoundWinnerMsg({
+          winner: data["username"] as string,
+          show: true
+        });
       }
     }
   }, [lastMessage]);
@@ -213,6 +235,13 @@ export function GameScreen(props: { username: string }) {
             <strong className="me-auto">Skipped!</strong>
           </Toast.Header>
           <Toast.Body>Previous player has played a Queen skipping your turn!</Toast.Body>
+        </Toast>
+
+        <Toast id="roundWinnerToast" show={roundWinnerMsg.show} delay={5000} autohide onClose={toggleRounderWinner}>
+          <Toast.Header>
+            <strong className="me-auto">Winner!</strong>
+          </Toast.Header>
+          <Toast.Body>Player {roundWinnerMsg.winner} has won this round!</Toast.Body>
         </Toast>
       </Container>
   )
