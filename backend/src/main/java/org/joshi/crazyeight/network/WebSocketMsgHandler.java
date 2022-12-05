@@ -6,6 +6,7 @@ import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.game.CompleteTurn;
 import org.joshi.crazyeight.game.Game;
 import org.joshi.crazyeight.msg.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -13,6 +14,9 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,6 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @Slf4j
 public class WebSocketMsgHandler extends TextWebSocketHandler {
+
+    @Value("${game.rigged:true}")
+    private boolean rigged;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private boolean gameStarted = false;
@@ -64,11 +72,18 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         if (msg instanceof CompleteTurnMsg completeTurnMsg) {
             log.info("Received complete turn message.");
             handleCompleteTurn(completeTurnMsg);
+            return;
         }
 
         if (msg instanceof DrawCardMsg) {
             log.info("Received draw card message.");
             handleDrawCard();
+            return;
+        }
+
+        if (msg instanceof RigRoundMsg rigRoundMsg) {
+            log.info("Received rig round message.");
+            handleRiggedMsg(rigRoundMsg);
         }
     }
 
@@ -111,11 +126,20 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
     private void sendStartRoundMsg() {
         game.resetRound();
         game.setPlayerHand();
+        game.setTopCard();
+
+        // If rigged wait for rigging
+        if (rigged) {
+            return;
+        }
+        broadcastStartRound();
+    }
+
+    private void broadcastStartRound() {
         for (var p : game.getPlayers()) {
             sendMsg(p.getUsername(), new StartRoundMsg(p.getHand()));
         }
         log.info("Sent start round message to '{}' players.", game.getPlayers().size());
-        game.setTopCard();
 
         game.setCurrentPlayer(overallPlayer - 1);
         updateOverallPlayer();
@@ -222,6 +246,36 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             }
         }
         return gameEnded;
+    }
+
+    private void handleRiggedMsg(RigRoundMsg msg) {
+        var split = msg.getRiggedCards().split(",");
+
+        String topCard = split[0];
+        List<String> riggedCards = new ArrayList<>();
+
+        for (int i = 0; i < game.getPlayers().size(); i++) {
+            if (split[i+2].isBlank()) {
+                riggedCards.add("");
+            } else {
+                riggedCards.add(split[i+2]);
+            }
+        }
+
+        game.rigRound(topCard, riggedCards);
+
+        if (split[1].isBlank()) {
+            return;
+        }
+
+        var cards = Game.getCardsFromText(split[1]);
+        Collections.reverse(cards);
+
+        for (var c : cards) {
+            game.getDeck().addCard(c);
+        }
+
+        broadcastStartRound();
     }
 
     private <T extends Message> void sendMsg(String username, T obj) {

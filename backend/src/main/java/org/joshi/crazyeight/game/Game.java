@@ -134,7 +134,7 @@ public class Game {
         }
     }
 
-    private List<Card> getCardsFromText(String text) {
+    public static List<Card> getCardsFromText(String text) {
         List<Card> cards = new ArrayList<>();
 
         var split = text.split("\\s+");
