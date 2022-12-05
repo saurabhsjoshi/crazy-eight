@@ -116,19 +116,20 @@ public class Game {
 
         topCard = new Card(card.suit(), card.rank());
 
-        for (int i = 0; i < riggedCards.size(); i++) {
-            var p = players.get(i);
-
+        // Put players current card back in the deck
+        for (var p : players) {
             for (var c : p.getHand()) {
                 deck.addCard(c);
             }
+            p.getHand().clear();
+        }
 
+        for (int i = 0; i < riggedCards.size(); i++) {
+            var p = players.get(i);
             var cards = getCardsFromText(riggedCards.get(i));
-
             for (var c : cards) {
                 deck.remove(c);
             }
-
             p.setHand(cards);
         }
     }
