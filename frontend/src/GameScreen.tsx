@@ -81,8 +81,6 @@ export function GameScreen(props: { username: string }) {
       }
 
       if (type === "StartTurn") {
-        console.log("Starting turn for this player.");
-
         let card: Card = {
           suit: Suit[data["topCard"].suit as keyof typeof Suit],
           rank: Rank[data["topCard"].rank as keyof typeof Rank]
@@ -96,6 +94,18 @@ export function GameScreen(props: { username: string }) {
         });
         return;
       }
+
+      if (type === "UpdateHand") {
+        const cards: Card[] = data["cards"]
+            .map((c: any) => {
+              return {
+                suit: Suit[c.suit as keyof typeof Suit],
+                rank: Rank[c.rank as keyof typeof Rank]
+              };
+            });
+        setPlayerHand(cards);
+        return;
+      }
     }
   }, [lastMessage]);
 
@@ -107,7 +117,7 @@ export function GameScreen(props: { username: string }) {
 
   const onCardClicked: onCardClick = (e) => {
     setTurnInfo(currentState => {
-      if(!currentState) {
+      if (!currentState) {
         return currentState;
       }
 
@@ -115,7 +125,11 @@ export function GameScreen(props: { username: string }) {
       let cardPlayed = playerHand[Number(btn.getAttribute("data-idx"))];
 
       if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.topCard.suit) {
-        console.log("Correct card");
+        console.log("Valid card " + btn.textContent);
+        sendJsonMessage({
+          "type": "CompleteTurn",
+          "card": btn.textContent
+        });
         return {...currentState, username: ""};
       }
 
