@@ -3,7 +3,7 @@ import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
-import PlayerHand, {Card, Rank, Suit, Turn} from "./PlayerHand";
+import PlayerHand, {Card, onCardClick, Rank, Suit, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
   const [turnInfo, setTurnInfo] = useState<Turn | null>(null);
@@ -104,6 +104,12 @@ export function GameScreen(props: { username: string }) {
     });
   }
 
+  const onCardClicked: onCardClick = (e) => {
+    if (turnInfo) {
+      setTurnInfo({...turnInfo, username: ""});
+    }
+  };
+
   return (
       <Container className="max-width">
         <Row>
@@ -134,7 +140,7 @@ export function GameScreen(props: { username: string }) {
 
         {
             gameStarted && turnInfo !== null &&
-            <PlayerHand username={props.username} hand={playerHand} turnInfo={turnInfo}/>
+            <PlayerHand cardClicked={onCardClicked} username={props.username} hand={playerHand} turnInfo={turnInfo}/>
         }
       </Container>
   )

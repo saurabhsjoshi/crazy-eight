@@ -1,11 +1,13 @@
 import {Container, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import React from "react";
 
 export interface Turn {
   topCard: Card
   cardsToDraw: number
   username: string
 }
+export type onCardClick = (e: React.MouseEvent<HTMLElement>) => void;
 
 export enum Suit {
   CLUBS,
@@ -40,7 +42,7 @@ function toText(c: Card | undefined): string {
   let s: string = "";
   let r: string = "";
 
-  if(c == null) {
+  if (c == null) {
     return r + s;
   }
 
@@ -117,24 +119,30 @@ function toText(c: Card | undefined): string {
   return r + s;
 }
 
-function PlayerHand(props: { username: string, hand: Card[], turnInfo: Turn | null}) {
+function PlayerHand(props: {
+  username: string, hand: Card[],
+  turnInfo: Turn | null,
+  cardClicked: onCardClick
+}) {
+
   return (
       <Container className="mt-4">
         <Row>
           <h5>Your Hand</h5>
         </Row>
-        <div className="btn-group" role="group">
+        <div id="playerHandBtnGrp" className="btn-group btn-group-lg" role="group">
           {
             props.hand.map(c => toText(c))
                 .map(c =>
-                    <Button disabled={props.username !== props.turnInfo?.username} className="btn">
+                    <Button onClick={props.cardClicked} id={c} disabled={props.username !== props.turnInfo?.username}
+                            className="btn">
                       {c}
                     </Button>
                 )
           }
         </div>
         <Row className="align-items-center align-content-center mt-3">
-            <h5>Top Card {toText(props.turnInfo?.topCard)}</h5>
+          <h5>Top Card {toText(props.turnInfo?.topCard)}</h5>
         </Row>
       </Container>
   );
