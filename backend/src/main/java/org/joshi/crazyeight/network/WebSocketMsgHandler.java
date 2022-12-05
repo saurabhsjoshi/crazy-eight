@@ -139,7 +139,13 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
                 game.getPlayers().get(currentPlayer).getUsername(),
                 completeTurn.getCard());
 
-        startTurn(game.completeTurn(completeTurn));
+        var result = game.completeTurn(completeTurn);
+
+        if (!result.getSkippedPlayer().isEmpty()) {
+            sendMsg(result.getSkippedPlayer(), new PlayerSkippedMsg());
+        }
+
+        startTurn(result.getNextPlayer());
 
         var player = game.getPlayers().get(currentPlayer);
         log.info("Sending update hand message to player '{}'.", player.getUsername());

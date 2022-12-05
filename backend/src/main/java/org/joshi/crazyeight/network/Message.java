@@ -17,7 +17,8 @@ import org.joshi.crazyeight.msg.*;
         @JsonSubTypes.Type(value = StartTurnMsg.class, name = "StartTurn"),
         @JsonSubTypes.Type(value = CompleteTurnMsg.class, name = "CompleteTurn"),
         @JsonSubTypes.Type(value = UpdateHandMsg.class, name = "UpdateHand"),
-        @JsonSubTypes.Type(value = DrawCardMsg.class, name = "DrawCard")
+        @JsonSubTypes.Type(value = DrawCardMsg.class, name = "DrawCard"),
+        @JsonSubTypes.Type(value = PlayerSkippedMsg.class, name = "PlayerSkipped")
 })
 public abstract class Message {
 }

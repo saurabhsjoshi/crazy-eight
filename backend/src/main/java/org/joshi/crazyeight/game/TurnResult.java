@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class TurnResult {
 
-    private String skippedPlayer;
+    private String skippedPlayer = "";
 
     private int direction;
 
-    private String nextPlayer;
+    private String nextPlayer = "";
 
-    private String winner;
+    private String winner = "";
 }
