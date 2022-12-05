@@ -27,7 +27,7 @@ public class Game {
     private int cardsToDraw = 0;
 
     public void addPlayer(String username) {
-        players.add(new Player(username, 0));
+        players.add(new Player(username));
     }
 
     public List<Player> getPlayers() {
@@ -217,5 +217,9 @@ public class Game {
 
     public int getCardsToDraw() {
         return cardsToDraw;
+    }
+
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 }

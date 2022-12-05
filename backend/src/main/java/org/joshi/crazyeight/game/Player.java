@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Player {
     private final String username;
-    private final int score;
+    private int score = 0;
     private List<Card> hand = new ArrayList<>();
 
     public void removeCard(Card card) {

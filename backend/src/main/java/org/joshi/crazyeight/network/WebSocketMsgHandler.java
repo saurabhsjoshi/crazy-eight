@@ -25,6 +25,8 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
 
     private boolean gameStarted = false;
 
+    private int overallPlayer = 0;
+
     private final ConcurrentHashMap<String, WebSocketSession> socketHandles = new ConcurrentHashMap<>();
 
     private final Game game;
@@ -115,6 +117,8 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         log.info("Sent start round message to '{}' players.", game.getPlayers().size());
         game.setTopCard();
 
+        game.setCurrentPlayer(overallPlayer - 1);
+        overallPlayer++;
         startTurn(game.nextTurn());
     }
 
@@ -131,7 +135,7 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
     }
 
     public void handleCompleteTurn(CompleteTurnMsg msg) {
-        // TODO: Handle if player has won or draw two or skip etc.
+        // TODO: Handle if player has draw two.
         var currentPlayer = game.getCurrentPlayer();
         var completeTurn = new CompleteTurn(Card.fromText(msg.getCard()));
 
@@ -140,6 +144,18 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
                 completeTurn.getCard());
 
         var result = game.completeTurn(completeTurn);
+
+        if (!result.getRoundWinner().isEmpty()) {
+
+            // Update scores
+            for (var p : game.getPlayers()) {
+                p.setScore(Game.getScore(p.getHand()));
+            }
+            broadcastPlayerScores();
+            //TODO: Handle overall winner
+            sendStartRoundMsg();
+            return;
+        }
 
         if (!result.getSkippedPlayer().isEmpty()) {
             sendMsg(result.getSkippedPlayer(), new PlayerSkippedMsg());
