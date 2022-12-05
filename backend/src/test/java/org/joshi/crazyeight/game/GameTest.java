@@ -6,6 +6,7 @@ import org.joshi.crazyeight.deck.Suit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -308,5 +309,19 @@ public class GameTest {
         var result = game.completeTurn(new CompleteTurn(new Card(Suit.HEART, Rank.FOUR)));
 
         assertEquals("testUser1", result.getRoundWinner());
+    }
+
+    @Test
+    void testScoring() {
+
+        assertEquals(50, Game.getScore(List.of(new Card(Suit.HEART, Rank.EIGHT))));
+
+        List<Card> cards = new ArrayList<>();
+        assertEquals(0, Game.getScore(cards));
+        cards.add(new Card(Suit.HEART, Rank.KING)); // 10
+        cards.add(new Card(Suit.SPADES, Rank.QUEEN)); // 20
+        cards.add(new Card(Suit.DIAMONDS, Rank.JACK)); // 30
+        cards.add(new Card(Suit.DIAMONDS, Rank.TWO)); // 32
+        assertEquals(32, Game.getScore(cards));
     }
 }
