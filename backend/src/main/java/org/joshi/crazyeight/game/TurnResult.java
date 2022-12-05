@@ -7,7 +7,7 @@ public class TurnResult {
 
     private String skippedPlayer = "";
 
-    private int direction;
+    private Integer direction = 0;
 
     private String nextPlayer = "";
 

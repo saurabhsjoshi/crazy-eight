@@ -145,6 +145,12 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             sendMsg(result.getSkippedPlayer(), new PlayerSkippedMsg());
         }
 
+        if (result.getDirection() != 0) {
+            for (var h : socketHandles.values()) {
+                sendMsg(h, new DirectionChangeMsg(result.getDirection()));
+            }
+        }
+
         startTurn(result.getNextPlayer());
 
         var player = game.getPlayers().get(currentPlayer);
