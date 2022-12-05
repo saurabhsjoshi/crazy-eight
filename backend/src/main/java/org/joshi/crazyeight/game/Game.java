@@ -144,13 +144,16 @@ public class Game {
         return cards;
     }
 
-    public String completeTurn(CompleteTurn turn) {
+    public TurnResult completeTurn(CompleteTurn turn) {
+
+        TurnResult result = new TurnResult();
 
         // Player passed
         if (turn.getCard() != null) {
             players.get(currentPlayer).removeCard(turn.getCard());
             topCard = turn.getCard();
         }
+
         cardsDrawn = 0;
 
         if (cardsToDraw != 0) {
@@ -167,12 +170,16 @@ public class Game {
         }
 
         switch (topCard.rank()) {
-            case ACE -> reverse();
-            case QUEEN -> nextTurn();
+            case ACE -> {
+                reverse();
+                result.setDirection(direction);
+            }
+            case QUEEN -> result.setSkippedPlayer(nextTurn());
             case TWO -> cardsToDraw += 2;
         }
 
-        return nextTurn();
+        result.setNextPlayer(nextTurn());
+        return result;
     }
 
     public int getCurrentPlayer() {
