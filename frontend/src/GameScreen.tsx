@@ -138,9 +138,18 @@ export function GameScreen(props: { username: string }) {
 
       if (type === "RoundWinner") {
         setRoundWinnerMsg({
-          winner: data["username"] as string,
+          winner: "Player " + data["username"] as string + " has won this round!",
           show: true
         });
+        return;
+      }
+
+      if (type === "GameWinner") {
+        setRoundWinnerMsg({
+          winner: "Player " + data["username"] as string + " has won the game!",
+          show: true
+        });
+        return;
       }
     }
   }, [lastMessage]);
@@ -241,7 +250,7 @@ export function GameScreen(props: { username: string }) {
           <Toast.Header>
             <strong className="me-auto">Winner!</strong>
           </Toast.Header>
-          <Toast.Body>Player {roundWinnerMsg.winner} has won this round!</Toast.Body>
+          <Toast.Body>{roundWinnerMsg.winner}</Toast.Body>
         </Toast>
       </Container>
   )
