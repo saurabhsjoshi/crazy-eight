@@ -3,7 +3,7 @@ import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
-import PlayerHand, {Card, onCardClick, Rank, Suit, Turn} from "./PlayerHand";
+import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
   const [turnInfo, setTurnInfo] = useState<Turn | null>(null);
@@ -90,7 +90,8 @@ export function GameScreen(props: { username: string }) {
           topCard: card,
           cardsToDraw: data["cardsToDraw"] as number,
           username: data["username"] as string,
-          error: undefined
+          error: undefined,
+          cardsDrawn: 0
         });
         return;
       }
@@ -138,6 +139,19 @@ export function GameScreen(props: { username: string }) {
     });
   };
 
+  const onDrawClicked: onDrawCardClick = () => {
+    setTurnInfo(currentState => {
+      if (!currentState) {
+        return currentState;
+      }
+      return {...currentState, cardsDrawn: currentState.cardsDrawn + 1};
+    });
+
+    sendJsonMessage({
+      "type": "DrawCard",
+    });
+  }
+
   return (
       <Container className="max-width">
         <Row>
@@ -168,7 +182,8 @@ export function GameScreen(props: { username: string }) {
 
         {
             gameStarted && turnInfo !== null &&
-            <PlayerHand cardClicked={onCardClicked} username={props.username} hand={playerHand} turnInfo={turnInfo}/>
+            <PlayerHand drawCardClicked={onDrawClicked} cardClicked={onCardClicked} username={props.username}
+                        hand={playerHand} turnInfo={turnInfo}/>
         }
       </Container>
   )

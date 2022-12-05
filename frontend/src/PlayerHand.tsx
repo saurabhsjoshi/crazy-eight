@@ -7,9 +7,12 @@ export interface Turn {
   cardsToDraw: number
   username: string
   error: string | undefined
+
+  cardsDrawn: number
 }
 
 export type onCardClick = (e: React.MouseEvent<HTMLElement>) => void;
+export type onDrawCardClick = (e: React.MouseEvent<HTMLElement>) => void;
 
 export enum Suit {
   CLUBS,
@@ -124,7 +127,8 @@ function toText(c: Card | undefined): string {
 function PlayerHand(props: {
   username: string, hand: Card[],
   turnInfo: Turn | null,
-  cardClicked: onCardClick
+  cardClicked: onCardClick,
+  drawCardClicked: onDrawCardClick
 }) {
   return (
       <Container className="mt-4">
@@ -145,6 +149,25 @@ function PlayerHand(props: {
                 )
           }
         </div>
+        <Row className="mt-4">
+          <div id="playerHandBtnGrp" className="btn-group btn-group-lg" role="group">
+            <Button
+                id="drawCardBtn"
+                onClick={props.drawCardClicked}
+                className="btn btn-info"
+                disabled={(props.username !== props.turnInfo?.username) || props.turnInfo.cardsDrawn > 2}>
+              Draw Card
+            </Button>
+            <Button
+                id="passBtn"
+                onClick={props.cardClicked}
+                className="btn btn-danger"
+                hidden={(props.username !== props.turnInfo?.username) || props.turnInfo.cardsDrawn < 3}>
+              End Round
+            </Button>
+          </div>
+        </Row>
+
         <Row className="align-items-center align-content-center mt-3">
           <h5>Top Card {toText(props.turnInfo?.topCard)}</h5>
         </Row>
