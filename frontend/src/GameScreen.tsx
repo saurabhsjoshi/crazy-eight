@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
+  const [directionOfPlay, setDirectionOfPlay] = useState<number>(1);
   const [showSkippedMsg, setSkippedMsg] = useState(false);
   const toggleShowSkipped = () => setSkippedMsg(!showSkippedMsg);
 
@@ -111,8 +112,13 @@ export function GameScreen(props: { username: string }) {
         return;
       }
 
-      if(type === "PlayerSkipped") {
+      if (type === "PlayerSkipped") {
         setSkippedMsg(true);
+        return;
+      }
+
+      if (type === "DirectionChange") {
+        setDirectionOfPlay(data["direction"] as number);
       }
     }
   }, [lastMessage]);
@@ -131,7 +137,7 @@ export function GameScreen(props: { username: string }) {
 
       const btn = e.target as HTMLInputElement;
 
-      if(btn.id === "passBtn") {
+      if (btn.id === "passBtn") {
         // Player has passed this round
         sendJsonMessage({
           "type": "CompleteTurn"
@@ -185,7 +191,7 @@ export function GameScreen(props: { username: string }) {
         <Row>
           {turnInfo !== null && <h6 id="currentTurn">Current Turn: {turnInfo?.username}</h6>}
         </Row>
-        <PlayerScoresTable playerScores={playerScores}/>
+        <PlayerScoresTable directionOfPlay={directionOfPlay} playerScores={playerScores}/>
         <Container>
           {
               isHost &&

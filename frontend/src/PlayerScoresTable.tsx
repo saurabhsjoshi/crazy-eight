@@ -1,4 +1,4 @@
-import {Container, Row, Table} from "react-bootstrap";
+import {Col, Container, Row, Table} from "react-bootstrap";
 import React from "react";
 
 export interface PlayerScore {
@@ -6,7 +6,7 @@ export interface PlayerScore {
   score: number;
 }
 
-function PlayerScoresTable(props: { playerScores: PlayerScore[] }) {
+function PlayerScoresTable(props: { playerScores: PlayerScore[], directionOfPlay: number }) {
   return (
       <Container>
         <Row>
@@ -32,6 +32,14 @@ function PlayerScoresTable(props: { playerScores: PlayerScore[] }) {
           </tr>
           </tbody>
         </Table>
+        <Row>
+          {
+            props.directionOfPlay === 1 ?
+              <h6>Direction of Play -&gt;</h6>
+              :
+              <h6>Direction of Play &lt;-</h6>
+          }
+        </Row>
       </Container>
   );
 }
