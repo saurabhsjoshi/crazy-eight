@@ -3,7 +3,7 @@ import useWebSocket, {ReadyState} from "react-use-websocket";
 import {Container, Row, Toast} from "react-bootstrap";
 import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
-import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, Turn} from "./PlayerHand";
+import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, toText, Turn} from "./PlayerHand";
 
 export function GameScreen(props: { username: string }) {
   const [directionOfPlay, setDirectionOfPlay] = useState<number>(1);
@@ -67,6 +67,23 @@ export function GameScreen(props: { username: string }) {
     RegistrationStatus.REGISTERED, sendJsonMessage, props.username]);
 
   useEffect(() => {
+    if (lastMessage === null) {
+      return;
+    }
+
+    const data = JSON.parse(lastMessage.data);
+    const type = data["type"];
+
+    if (type === "StartTurn") {
+      let toDraw = data["cardsToDraw"] as number;
+
+      if (toDraw !== 0 && turnInfo?.username === props.username) {
+        setShowDrawMsg(true);
+      }
+    }
+  }, [lastMessage, turnInfo?.username, props.username]);
+
+  useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
       const type = data["type"];
@@ -106,19 +123,13 @@ export function GameScreen(props: { username: string }) {
           suit: Suit[data["topCard"].suit as keyof typeof Suit],
           rank: Rank[data["topCard"].rank as keyof typeof Rank]
         }
-
-        let toDraw = data["cardsToDraw"] as number;
-
-        if (toDraw !== 0 && turnInfo?.username === props.username) {
-          setShowDrawMsg(true);
-        }
-
         setTurnInfo({
           topCard: card,
-          cardsToDraw: toDraw,
+          cardsToDraw: data["cardsToDraw"] as number,
           username: data["username"] as string,
           error: undefined,
-          cardsDrawn: 0
+          cardsDrawn: 0,
+          extraCard: undefined
         });
         return;
       }
@@ -161,7 +172,7 @@ export function GameScreen(props: { username: string }) {
         return;
       }
     }
-  }, [lastMessage, props.username, turnInfo?.username]);
+  }, [lastMessage, props.username]);
 
   const onStartGame = () => {
     sendJsonMessage({
@@ -185,7 +196,21 @@ export function GameScreen(props: { username: string }) {
         return {...currentState, username: ""};
       }
 
+      if (btn.id.startsWith("Suits")) {
+        sendJsonMessage({
+          "type": "CompleteTurn",
+          "card": toText(currentState.extraCard),
+          "suit": btn.textContent
+        });
+        return {...currentState, username: "", extraCard: undefined};
+      }
+
       let cardPlayed = playerHand[Number(btn.getAttribute("data-idx"))];
+
+      if (cardPlayed.rank === Rank.EIGHT) {
+        console.log("User played eight");
+        return {...currentState, extraCard: cardPlayed, username: ""};
+      }
 
       if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.topCard.suit) {
         console.log("Valid card " + btn.textContent);
