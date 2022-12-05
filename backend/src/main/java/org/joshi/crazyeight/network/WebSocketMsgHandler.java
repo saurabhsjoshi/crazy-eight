@@ -75,9 +75,9 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
             return;
         }
 
-        if (msg instanceof DrawCardMsg) {
+        if (msg instanceof DrawCardMsg drawCardMsg) {
             log.info("Received draw card message.");
-            handleDrawCard();
+            handleDrawCard(drawCardMsg);
             return;
         }
 
@@ -87,8 +87,12 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         }
     }
 
-    private void handleDrawCard() {
-        game.drawCard();
+    private void handleDrawCard(DrawCardMsg drawCardMsg) {
+        if (drawCardMsg.getNum() != null) {
+            game.drawCards();
+        } else {
+            game.drawCard();
+        }
         var player = game.getPlayers().get(game.getCurrentPlayer());
         sendMsg(player.getUsername(), new UpdateHandMsg(player.getHand()));
     }
@@ -255,10 +259,10 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         List<String> riggedCards = new ArrayList<>();
 
         for (int i = 0; i < game.getPlayers().size(); i++) {
-            if (split[i+2].isBlank()) {
+            if (split[i + 2].isBlank()) {
                 riggedCards.add("");
             } else {
-                riggedCards.add(split[i+2]);
+                riggedCards.add(split[i + 2]);
             }
         }
 

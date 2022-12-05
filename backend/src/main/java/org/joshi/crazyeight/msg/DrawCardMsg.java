@@ -7,4 +7,5 @@ import org.joshi.crazyeight.network.Message;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DrawCardMsg extends Message {
+    Integer num;
 }
