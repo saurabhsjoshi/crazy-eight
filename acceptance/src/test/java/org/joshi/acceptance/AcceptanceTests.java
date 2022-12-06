@@ -370,4 +370,32 @@ public class AcceptanceTests {
         // Validate turn complete
         assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
     }
+
+    @Test
+    void R59() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(driver, "7C", "6D 5C",
+                List.of(
+                        "3H",
+                        "4S 6S KC 7D 10D",
+                        "9H 6C 9C JD 7H",
+                        "3H JH QC 1C 1H"
+                ));
+
+        drawCard(driver);
+        // Validate 6D was drawn
+        assertNotNull(getCardInHandBtn(driver, "6D"));
+
+        drawCard(driver);
+        assertNotNull(getCardInHandBtn(driver, "5C"));
+
+        playCard(driver, "5C");
+
+        // Validate turn complete
+        assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
+    }
 }
