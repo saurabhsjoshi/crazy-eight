@@ -31,7 +31,7 @@ public class TestUtilities {
     }
 
     public static WebElement getById(WebDriver driver, String id) {
-        return new WebDriverWait(driver, Duration.ofSeconds(2))
+        return new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
     }
 
@@ -44,8 +44,12 @@ public class TestUtilities {
         btn.click();
     }
 
-    public static WebElement getCurrentTurn(WebDriver driver) {
+    public static WebElement getCurrentTurnLbl(WebDriver driver) {
         return getById(driver, "currentTurnLbl");
+    }
+
+    public static WebElement getCurrentDirectionLbl(WebDriver driver) {
+        return getById(driver, "directionLbl");
     }
 
     public static WebElement getUserScoreLbl(WebDriver driver, String username) {

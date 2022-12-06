@@ -109,7 +109,38 @@ public class AcceptanceTests {
 
         // p1 plays 3C
         playCard(players.get(0), "3C");
-        var currentTurnLbl = getCurrentTurn(players.get(0));
+        var currentTurnLbl = getCurrentTurnLbl(players.get(0));
         assertTrue(validateText(players.get(0), currentTurnLbl, "Current Turn: Player2"));
+    }
+
+    @Test
+    void R43() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        rigGame(driver, "1C", "",
+                List.of(
+                        "3C 7S 1H 6D 9D",
+                        "4S 6S KC 7D 10D",
+                        "9S 6C 9C JD 3H",
+                        "7H JH QH KH 5C"
+                ));
+
+        // p1 plays 1H
+        playCard(driver, "1H");
+
+        var currentTurnLbl = getCurrentTurnLbl(driver);
+        assertTrue(validateText(driver, currentTurnLbl, "Current Turn: Player4"));
+
+        assertTrue(validateText(driver, getCurrentDirectionLbl(driver), "<-"));
+
+        driver = players.get(3);
+        // p4 plays 1H
+        playCard(driver, "7H");
+
+        // Validate it is p3's turn
+        currentTurnLbl = getCurrentTurnLbl(driver);
+        assertTrue(validateText(driver, currentTurnLbl, "Current Turn: Player3"));
     }
 }
