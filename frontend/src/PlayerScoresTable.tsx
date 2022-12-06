@@ -35,9 +35,9 @@ function PlayerScoresTable(props: { playerScores: PlayerScore[], directionOfPlay
         <Row>
           {
             props.directionOfPlay === 1 ?
-              <h6>Direction of Play -&gt;</h6>
+              <h6 id="directionLbl">Direction of Play -&gt;</h6>
               :
-              <h6>Direction of Play &lt;-</h6>
+              <h6 id="directionLbl">Direction of Play &lt;-</h6>
           }
         </Row>
       </Container>
