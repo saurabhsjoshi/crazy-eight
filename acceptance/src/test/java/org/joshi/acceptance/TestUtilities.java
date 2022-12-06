@@ -89,8 +89,16 @@ public class TestUtilities {
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("connectionLbl")));
     }
 
+    public static WebElement getDrawCardBtn(WebDriver driver) {
+        return getById(driver, "drawCardBtn");
+    }
+
+    public static void skipTurn(WebDriver driver) {
+        getById(driver, "passBtn").click();
+    }
+
     public static void drawCard(WebDriver driver) {
-        getById(driver, "drawCardBtn").click();
+        getDrawCardBtn(driver).click();
     }
 
     public static void rigGame(WebDriver driver, String topCard, String rigDeck, List<String> rig) {
