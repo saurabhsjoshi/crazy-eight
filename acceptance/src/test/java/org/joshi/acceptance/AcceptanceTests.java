@@ -4,30 +4,21 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/**
- * UI only test cases.
- */
-@Disabled
-public class UiTests {
-
+public class AcceptanceTests {
     Process server;
+
+    List<ChromeDriver> players = new ArrayList<>();
 
     private String getJavaPath() {
         return ProcessHandle.current()
@@ -60,51 +51,35 @@ public class UiTests {
     public void setup() throws IOException {
         ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", "crazy-eight.jar");
         builder.directory(new File(Path.of("").toAbsolutePath().toString()));
+        builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         server = builder.start();
-        var reader = new BufferedReader(new InputStreamReader(server.getInputStream()));
+
+        var reader = new BufferedReader(new InputStreamReader(server.getErrorStream()));
         String line = reader.readLine();
 
         // Wait for application to start
-        while (line != null && !line.contains("Started CrazyEightApplication in")) {
+        while (line != null && !line.contains("APPLICATION STARTUP SUCCESS")) {
             System.out.println(line);
             line = reader.readLine();
+        }
+
+        for (int i = 0; i < 4; i++) {
+            var driver = getDriver();
+            driver.get("http://localhost:8080");
+            players.add(driver);
+            TestUtilities.login(driver, "Player" + i);
         }
     }
 
     @AfterEach
-    public void teardown() {
+    public void teardown() throws InterruptedException {
         if (server != null) {
             server.destroy();
+            server.waitFor();
+        }
+        for (var p : players) {
+            p.quit();
         }
     }
 
-    /**
-     * Test that checks if user can log in via the UI.
-     */
-    @Test
-    void testLogin() {
-        WebDriver driver = getDriver();
-        driver.get("http://localhost:8080");
-        TestUtilities.login(driver, "Player1");
-
-        assertEquals("Username: Player1", TestUtilities.getUsernameLbl(driver).getText());
-
-        var connectionStatus = TestUtilities.getConnectionLbl(driver);
-        new WebDriverWait(driver, Duration.ofSeconds(2))
-                .until(ExpectedConditions.textToBePresentInElement(connectionStatus, "Connection Status: Connected"));
-
-        var registerState = TestUtilities.getUserRegisterLbl(driver);
-        new WebDriverWait(driver, Duration.ofSeconds(2))
-                .until(ExpectedConditions.textToBePresentInElement(registerState, "User Registration: Registered"));
-
-        var userScoreLbl = TestUtilities.getUserScoreLbl(driver, "Player1");
-        new WebDriverWait(driver, Duration.ofSeconds(2))
-                .until(ExpectedConditions.textToBePresentInElement(userScoreLbl, "0"));
-
-
-        var startGameBtn = TestUtilities.getStartGameBtn(driver);
-        assertEquals("true", startGameBtn.getAttribute("disabled"));
-
-        driver.quit();
-    }
 }
