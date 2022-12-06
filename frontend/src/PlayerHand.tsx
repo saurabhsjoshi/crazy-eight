@@ -141,6 +141,7 @@ function PlayerHand(props: {
             props.hand.map(c => toText(c))
                 .map((c, index) =>
                     <Button onClick={props.cardClicked}
+                            id={c + "_handBtn"}
                             key={c}
                             data-idx={index}
                             disabled={props.username !== props.turnInfo?.username}

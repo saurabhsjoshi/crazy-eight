@@ -278,7 +278,7 @@ export function GameScreen(props: { username: string }) {
           <h6 id="userRegisterLbl">User Registration: {registrationStatus}</h6>
         </Row>
         <Row>
-          {turnInfo !== null && <h6 id="currentTurn">Current Turn: {turnInfo?.username}</h6>}
+          {turnInfo !== null && <h6 id="currentTurnLbl">Current Turn: {turnInfo?.username}</h6>}
         </Row>
         <PlayerScoresTable directionOfPlay={directionOfPlay} playerScores={playerScores}/>
         <Container>

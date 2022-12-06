@@ -268,15 +268,13 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
 
         game.rigRound(topCard, riggedCards);
 
-        if (split[1].isBlank()) {
-            return;
-        }
+        if (!split[1].isBlank()) {
+            var cards = Game.getCardsFromText(split[1]);
+            Collections.reverse(cards);
 
-        var cards = Game.getCardsFromText(split[1]);
-        Collections.reverse(cards);
-
-        for (var c : cards) {
-            game.getDeck().addCard(c);
+            for (var c : cards) {
+                game.getDeck().addCard(c);
+            }
         }
 
         broadcastStartRound();
