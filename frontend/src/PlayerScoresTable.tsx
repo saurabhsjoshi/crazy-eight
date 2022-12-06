@@ -1,4 +1,4 @@
-import {Col, Container, Row, Table} from "react-bootstrap";
+import {Container, Row, Table} from "react-bootstrap";
 import React from "react";
 
 export interface PlayerScore {
