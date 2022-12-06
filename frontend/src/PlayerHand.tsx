@@ -211,7 +211,7 @@ function PlayerHand(props: {
         <Row className="align-items-center align-content-center mt-3">
           <h5>Top Card {toText(props.turnInfo?.topCard)}</h5>
           {
-              props.turnInfo && <h5>Current Suit {Suit[props.turnInfo.currentSuit]}</h5>
+              props.turnInfo && <h5 id="currentSuitLbl">Current Suit {Suit[props.turnInfo.currentSuit]}</h5>
           }
 
         </Row>
