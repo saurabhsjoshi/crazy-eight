@@ -177,6 +177,28 @@ public class GameTest {
     }
 
     @Test
+    void testCompleteTurn_Eight() {
+        addFourPlayers();
+        game.setPlayerHand();
+        game.setTopCard();
+
+        assertEquals("testUser1", game.nextTurn());
+        List<String> riggedCards = List.of(
+                "4H 7S 5D 6D 8D",
+                "4S 1D KC 8H 10H",
+                "9S 6C 9C JD 3H",
+                "7D JH QH KH 5C"
+        );
+        game.rigRound("4D", riggedCards);
+
+        var completeTurn = new CompleteTurn(new Card(Suit.DIAMONDS, Rank.EIGHT));
+        completeTurn.setSuit(Suit.HEART);
+
+        var result = game.completeTurn(completeTurn);
+        assertEquals(Suit.HEART, result.getCurrentSuit());
+    }
+
+    @Test
     void testCompleteTurn_Reverse() {
         addFourPlayers();
         game.setPlayerHand();
