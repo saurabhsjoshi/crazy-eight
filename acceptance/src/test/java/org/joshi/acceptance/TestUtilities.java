@@ -10,8 +10,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TestUtilities {
 
     /**
@@ -46,6 +44,10 @@ public class TestUtilities {
 
     public static WebElement getCurrentTurnLbl(WebDriver driver) {
         return getById(driver, "currentTurnLbl");
+    }
+
+    public static WebElement getSkipNotification(WebDriver driver) {
+        return getById(driver, "skippedToast");
     }
 
     public static WebElement getCurrentDirectionLbl(WebDriver driver) {

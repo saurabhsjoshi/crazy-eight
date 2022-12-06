@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.joshi.acceptance.TestUtilities.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AcceptanceTests {
@@ -143,4 +144,29 @@ public class AcceptanceTests {
         currentTurnLbl = getCurrentTurnLbl(driver);
         assertTrue(validateText(driver, currentTurnLbl, "Current Turn: Player3"));
     }
+
+    @Test
+    void R44() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        rigGame(driver, "1C", "",
+                List.of(
+                        "QC 7S 1H 6D 9D",
+                        "4S 6S KC 7D 10D",
+                        "9S 6C 9C JD 3H",
+                        "7H JH QH KH 5C"
+                ));
+        // p4 plays QC
+        playCard(driver, "QC");
+
+        driver = players.get(1);
+        // Validate skip notification is shown to player 3
+        assertNotNull(getSkipNotification(driver));
+
+        var currentTurnLbl = getCurrentTurnLbl(driver);
+        assertTrue(validateText(driver, currentTurnLbl, "Current Turn: Player3"));
+    }
+
 }
