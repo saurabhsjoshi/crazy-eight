@@ -129,7 +129,8 @@ export function GameScreen(props: { username: string }) {
           username: data["username"] as string,
           error: undefined,
           cardsDrawn: 0,
-          extraCard: undefined
+          extraCard: undefined,
+          currentSuit: Suit[data.currentSuit as keyof typeof Suit]
         });
         return;
       }
@@ -212,7 +213,7 @@ export function GameScreen(props: { username: string }) {
         return {...currentState, extraCard: cardPlayed, username: ""};
       }
 
-      if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.topCard.suit) {
+      if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.currentSuit) {
         console.log("Valid card " + btn.textContent);
         sendJsonMessage({
           "type": "CompleteTurn",

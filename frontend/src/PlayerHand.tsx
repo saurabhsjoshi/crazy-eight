@@ -10,6 +10,7 @@ export interface Turn {
 
   cardsDrawn: number,
   extraCard: Card | undefined
+  currentSuit: Suit
 }
 
 export type onCardClick = (e: React.MouseEvent<HTMLElement>) => void;
@@ -131,6 +132,30 @@ function PlayerHand(props: {
   cardClicked: onCardClick,
   drawCardClicked: onDrawCardClick
 }) {
+
+  const isValid = (username:string, turnInfo: Turn | null, hand: Card[], idx: number) => {
+    if(!turnInfo) {
+      return false;
+    }
+    if(username !== turnInfo.username) {
+      return false;
+    }
+
+    let c = hand.at(idx);
+
+    if(!c) {
+      return false;
+    }
+
+    if(c.rank === Rank.EIGHT) {
+      return true;
+    }
+
+    return c.rank === turnInfo.topCard.rank || c.suit === turnInfo.currentSuit;
+
+
+  }
+
   return (
       <Container className="mt-4">
         <Row>
@@ -144,7 +169,7 @@ function PlayerHand(props: {
                             id={c + "_handBtn"}
                             key={c}
                             data-idx={index}
-                            disabled={props.username !== props.turnInfo?.username}
+                            disabled={!isValid(props.username, props.turnInfo, props.hand, index)}
                             className="btn">
                       {c}
                     </Button>
@@ -185,6 +210,10 @@ function PlayerHand(props: {
 
         <Row className="align-items-center align-content-center mt-3">
           <h5>Top Card {toText(props.turnInfo?.topCard)}</h5>
+          {
+              props.turnInfo && <h5>Current Suit {Suit[props.turnInfo.currentSuit]}</h5>
+          }
+
         </Row>
       </Container>
   );
