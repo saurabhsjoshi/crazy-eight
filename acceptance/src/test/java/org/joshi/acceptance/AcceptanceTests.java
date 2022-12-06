@@ -158,7 +158,7 @@ public class AcceptanceTests {
                         "9S 6C 9C JD 3H",
                         "7H JH QH KH 5C"
                 ));
-        // p4 plays QC
+        // p1 plays QC
         playCard(driver, "QC");
 
         driver = players.get(1);
@@ -167,6 +167,35 @@ public class AcceptanceTests {
 
         var currentTurnLbl = getCurrentTurnLbl(driver);
         assertTrue(validateText(driver, currentTurnLbl, "Current Turn: Player3"));
+    }
+
+    @Test
+    void R45() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        rigGame(driver, "1C", "",
+                List.of(
+                        "QC 7S 1H 6D 9D",
+                        "4S 6S KC 7D 10D",
+                        "9S 6C 9C JD 3H",
+                        "7H JH QH KH 3C"
+                ));
+        // p1 plays QC
+        playCard(driver, "QC");
+
+        // p3 plays 6C
+        driver = players.get(2);
+        playCard(driver, "6C");
+
+        // p4 plays 3c
+        driver = players.get(3);
+        playCard(driver, "3C");
+
+        // Validate next turn is p1
+        var currentTurnLbl = getCurrentTurnLbl(driver);
+        assertTrue(validateText(driver, currentTurnLbl, "Current Turn: Player1"));
     }
 
 }
