@@ -39,6 +39,8 @@ public class TestUtilities {
 
     public static void playCard(WebDriver driver, String card) {
         var btn = getById(driver, card + "_handBtn");
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.elementToBeClickable(btn));
         btn.click();
     }
 
