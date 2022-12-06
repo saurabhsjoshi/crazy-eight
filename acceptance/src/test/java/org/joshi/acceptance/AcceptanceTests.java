@@ -284,4 +284,24 @@ public class AcceptanceTests {
         // Validate next turn is p2
         assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
     }
+
+    @Test
+    void R52() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(driver, "KC", "",
+                List.of(
+                        "7C 7S 3C 6D 9D",
+                        "4S 6S KC 7D 10D",
+                        "9H 6C 9C JD 7H",
+                        "3H JH QC 1C 1H"
+                ));
+        playCard(driver, "7C");
+
+        // Validate next turn is p2
+        assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
+    }
 }
