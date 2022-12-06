@@ -1,19 +1,23 @@
 package org.joshi.acceptance;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.joshi.acceptance.TestUtilities.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AcceptanceTests {
     Process server;
@@ -67,7 +71,15 @@ public class AcceptanceTests {
             var driver = getDriver();
             driver.get("http://localhost:8080");
             players.add(driver);
-            TestUtilities.login(driver, "Player" + i);
+            TestUtilities.login(driver, "Player" + (i + 1));
+        }
+
+        // Validate all players are registered with the backend
+        for (var p : players) {
+            var registerState = TestUtilities.getUserRegisterLbl(p);
+            new WebDriverWait(p, Duration.ofSeconds(1))
+                    .until(ExpectedConditions.textToBePresentInElement(
+                            registerState, "User Registration: Registered"));
         }
     }
 
@@ -82,4 +94,22 @@ public class AcceptanceTests {
         }
     }
 
+    @Test
+    void R41() {
+        var startGame = getStartGameBtn(players.get(0));
+        startGame.click();
+
+        rigGame(players.get(0), "1C", "",
+                List.of(
+                        "3C 7S 5D 6D 9D",
+                        "4S 6S KC 8H 10D",
+                        "9S 6C 9C JD 3H",
+                        "7D JH QH KH 5C"
+                ));
+
+        // p1 plays 3C
+        playCard(players.get(0), "3C");
+        var currentTurnLbl = getCurrentTurn(players.get(0));
+        assertTrue(validateText(players.get(0), currentTurnLbl, "Current Turn: Player2"));
+    }
 }
