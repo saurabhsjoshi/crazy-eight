@@ -3,6 +3,7 @@ package org.joshi.crazyeight.game;
 import org.joshi.crazyeight.deck.Card;
 import org.joshi.crazyeight.deck.CardDeck;
 import org.joshi.crazyeight.deck.Rank;
+import org.joshi.crazyeight.deck.Suit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public class Game {
     private int cardsDrawn = 0;
 
     private int cardsToDraw = 0;
+
+    private Suit currentSuit;
 
     public void addPlayer(String username) {
         players.add(new Player(username));
@@ -50,7 +53,7 @@ public class Game {
     public void resetRound() {
         deck.reset();
         deck.shuffle();
-        topCard = null;
+        setTopCard(null);
         cardsDrawn = 0;
     }
 
@@ -62,12 +65,13 @@ public class Game {
 
     public void setTopCard() {
         if (topCard != null) {
-            topCard = deck.top();
+            setTopCard(deck.top());
+            return;
         }
-        topCard = deck.top();
+        setTopCard(deck.top());
         while (topCard.rank() == Rank.EIGHT) {
             var cur = new Card(topCard.suit(), topCard.rank());
-            topCard = deck.top();
+            setTopCard(deck.top());
             deck.addCard(cur);
             deck.shuffle();
         }
@@ -114,7 +118,7 @@ public class Game {
         deck.remove(card);
         deck.addCard(topCard);
 
-        topCard = new Card(card.suit(), card.rank());
+        setTopCard(new Card(card.suit(), card.rank()));
 
         // Put players current card back in the deck
         for (var p : players) {
@@ -148,10 +152,12 @@ public class Game {
 
         TurnResult result = new TurnResult();
 
-        // Player passed
         if (turn.getCard() != null) {
             players.get(currentPlayer).removeCard(turn.getCard());
-            topCard = turn.getCard();
+            setTopCard(turn.getCard());
+        } else {
+            // Player skipped their turn
+            cardsToDraw = 0;
         }
 
         if (players.get(currentPlayer).getHand().isEmpty()) {
@@ -165,13 +171,17 @@ public class Game {
             // Player skipped draw two
             if (turn.getDrawTwoCard() != null) {
                 players.get(currentPlayer).removeCard(turn.getDrawTwoCard());
-                topCard = turn.getDrawTwoCard();
+                setTopCard(turn.getDrawTwoCard());
             }
 
             if (topCard.rank() != Rank.TWO) {
                 // Reset if the card played is not another two
                 cardsToDraw = 0;
             }
+        }
+
+        if (topCard.rank() == Rank.EIGHT) {
+            currentSuit = turn.getSuit();
         }
 
         switch (topCard.rank()) {
@@ -183,6 +193,7 @@ public class Game {
             case TWO -> cardsToDraw += 2;
         }
 
+        result.setCurrentSuit(currentSuit);
         result.setNextPlayer(nextTurn());
         return result;
     }
@@ -221,5 +232,12 @@ public class Game {
 
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    private void setTopCard(Card card) {
+        if (card != null) {
+            topCard = card;
+            currentSuit = topCard.suit();
+        }
     }
 }

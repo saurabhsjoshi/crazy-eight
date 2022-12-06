@@ -1,6 +1,7 @@
 package org.joshi.crazyeight.game;
 
 import lombok.Data;
+import org.joshi.crazyeight.deck.Suit;
 
 @Data
 public class TurnResult {
@@ -14,4 +15,6 @@ public class TurnResult {
     private String winner = "";
 
     private String roundWinner = "";
+
+    private Suit currentSuit;
 }
