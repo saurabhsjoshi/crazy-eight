@@ -1,7 +1,10 @@
 package org.joshi.acceptance;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -17,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.joshi.acceptance.TestUtilities.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AcceptanceTests {
     Process server;
@@ -325,4 +327,24 @@ public class AcceptanceTests {
         assertNotNull(getById(driver, "suitsBtnGrp"));
     }
 
+    @Test
+    void R54() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(driver, "KC", "",
+                List.of(
+                        "8H 7S 3C 5S 9D",
+                        "4S 6S KC 7D 10D",
+                        "9H 6C 9C JD 7H",
+                        "3H JH QC 1C 1H"
+                ));
+
+        // Get the button corresponding to card 5S
+        var btn = getCardInHandBtn(driver, "5S");
+        // Validate it is disabled
+        assertFalse(btn.isEnabled());
+    }
 }

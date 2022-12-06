@@ -37,8 +37,12 @@ public class TestUtilities {
         return getById(driver, "userRegisterLbl");
     }
 
+    public static WebElement getCardInHandBtn(WebDriver driver, String card) {
+        return getById(driver, card + "_handBtn");
+    }
+
     public static void playCard(WebDriver driver, String card) {
-        var btn = getById(driver, card + "_handBtn");
+        var btn = getCardInHandBtn(driver, card + "_handBtn");
         new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.elementToBeClickable(btn));
         btn.click();
