@@ -458,4 +458,39 @@ public class AcceptanceTests {
         // Validate turn complete
         assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
     }
+
+    @Test
+    void R62() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(driver, "7C", "6D 8H",
+                List.of(
+                        "3H",
+                        "4S 6S KC 7D 10D",
+                        "9H 6C 9C JD 7H",
+                        "3H JH QC 1C 1H"
+                ));
+
+        drawCard(driver);
+        assertNotNull(getCardInHandBtn(driver, "6D"));
+        drawCard(driver);
+        assertNotNull(getCardInHandBtn(driver, "8H"));
+
+        playCard(driver, "8H");
+
+        // Validate suit selection is shown to the user
+        assertNotNull(getById(driver, "suitsBtnGrp"));
+
+        // Select diamond as current suit
+        selectSuit(driver, "Diamonds");
+        // Validate suit has changed
+        validateText(driver, getCurrentSuitLbl(driver), "Current Suit DIAMONDS");
+
+        // Validate turn complete
+        assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
+    }
+
 }

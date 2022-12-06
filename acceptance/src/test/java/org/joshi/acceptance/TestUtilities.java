@@ -68,6 +68,10 @@ public class TestUtilities {
         return getById(driver, "startGameBtn");
     }
 
+    public static WebElement getCurrentSuitLbl(WebDriver driver) {
+        return getById(driver, "currentSuitLbl");
+    }
+
     public static WebElement getUsernameLbl(WebDriver driver) {
         return new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("usernameLbl")));
@@ -99,6 +103,10 @@ public class TestUtilities {
 
     public static void drawCard(WebDriver driver) {
         getDrawCardBtn(driver).click();
+    }
+
+    public static void selectSuit(WebDriver driver, String suit) {
+        getById(driver, "Suits" + suit + "Btn").click();
     }
 
     public static void rigGame(WebDriver driver, String topCard, String rigDeck, List<String> rig) {
