@@ -155,6 +155,7 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
         msg.setUsername(nextPlayer);
         msg.setCardsToDraw(game.getCardsToDraw());
         msg.setTopCard(game.getTopCard());
+        msg.setCurrentSuit(game.getCurrentSuit());
         log.info("Starting turn for player '{}' with top card '{}'.", nextPlayer, msg.getTopCard());
 
         for (var p : game.getPlayers()) {

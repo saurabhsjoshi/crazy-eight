@@ -240,4 +240,8 @@ public class Game {
             currentSuit = topCard.suit();
         }
     }
+
+    public Suit getCurrentSuit() {
+        return currentSuit;
+    }
 }
