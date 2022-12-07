@@ -210,7 +210,7 @@ public class Game {
                 case THREE -> 3;
                 case FOUR -> 4;
                 case FIVE -> 5;
-                case SIX -> 8;
+                case SIX -> 6;
                 case SEVEN -> 7;
                 case EIGHT -> 50;
                 case NINE -> 9;
