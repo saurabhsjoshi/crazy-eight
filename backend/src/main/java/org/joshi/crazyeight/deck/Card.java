@@ -7,7 +7,7 @@ public record Card(Suit suit, Rank rank) {
     }
 
     public static Card fromText(String text) {
-        if (text == null) {
+        if (text == null || text.isBlank()) {
             return null;
         }
         return new Card(

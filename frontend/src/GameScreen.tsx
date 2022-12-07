@@ -130,6 +130,7 @@ export function GameScreen(props: { username: string }) {
           error: undefined,
           cardsDrawn: 0,
           extraCard: undefined,
+          selectedCard: undefined,
           currentSuit: Suit[data.currentSuit as keyof typeof Suit]
         });
         return;
@@ -189,6 +190,13 @@ export function GameScreen(props: { username: string }) {
 
       const btn = e.target as HTMLInputElement;
 
+      // Player has selected one card
+      if (currentState.cardsToDraw !== 0) {
+        if (!currentState.selectedCard) {
+          return {...currentState, selectedCard: btn.textContent?.toString()}
+        }
+      }
+
       if (btn.id === "passBtn") {
         // Player has passed this round
         sendJsonMessage({
@@ -198,11 +206,20 @@ export function GameScreen(props: { username: string }) {
       }
 
       if (btn.id.startsWith("Suits")) {
-        sendJsonMessage({
-          "type": "CompleteTurn",
-          "card": toText(currentState.extraCard),
-          "suit": btn.textContent
-        });
+        if (currentState.selectedCard) {
+          sendJsonMessage({
+            "type": "CompleteTurn",
+            "card": currentState.selectedCard,
+            "suit": btn.textContent,
+            "additionalCard": toText(currentState.extraCard)
+          });
+        } else {
+          sendJsonMessage({
+            "type": "CompleteTurn",
+            "card": toText(currentState.extraCard),
+            "suit": btn.textContent
+          });
+        }
         return {...currentState, username: "", extraCard: undefined};
       }
 
@@ -215,10 +232,18 @@ export function GameScreen(props: { username: string }) {
 
       if (cardPlayed.rank === currentState.topCard.rank || cardPlayed.suit === currentState.currentSuit) {
         console.log("Valid card " + btn.textContent);
-        sendJsonMessage({
-          "type": "CompleteTurn",
-          "card": btn.textContent
-        });
+        if (currentState.selectedCard) {
+          sendJsonMessage({
+            "type": "CompleteTurn",
+            "card": currentState.selectedCard,
+            "additionalCard": btn.textContent
+          });
+        } else {
+          sendJsonMessage({
+            "type": "CompleteTurn",
+            "card": btn.textContent
+          });
+        }
         return {...currentState, username: ""};
       }
 

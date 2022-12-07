@@ -10,6 +10,7 @@ export interface Turn {
 
   cardsDrawn: number,
   extraCard: Card | undefined
+  selectedCard: string | undefined
   currentSuit: Suit
 }
 
@@ -133,21 +134,26 @@ function PlayerHand(props: {
   drawCardClicked: onDrawCardClick
 }) {
 
-  const isValid = (username:string, turnInfo: Turn | null, hand: Card[], idx: number) => {
-    if(!turnInfo) {
+  const isValid = (username: string, turnInfo: Turn | null, hand: Card[], idx: number) => {
+    if (!turnInfo) {
       return false;
     }
-    if(username !== turnInfo.username) {
+
+    if (username !== turnInfo.username) {
       return false;
     }
 
     let c = hand.at(idx);
 
-    if(!c) {
+    if (!c) {
       return false;
     }
 
-    if(c.rank === Rank.EIGHT) {
+    if(toText(c) === turnInfo.selectedCard) {
+      return false;
+    }
+
+    if (c.rank === Rank.EIGHT) {
       return true;
     }
 
