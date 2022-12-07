@@ -64,6 +64,10 @@ public class TestUtilities {
         return getById(driver, "scoreLbl_" + username);
     }
 
+    public static WebElement getWinnerFromNotification(WebDriver driver) {
+        return getById(driver, "roundWinnerToastBody");
+    }
+
     public static WebElement getStartGameBtn(WebDriver driver) {
         return getById(driver, "startGameBtn");
     }
