@@ -652,4 +652,29 @@ public class AcceptanceTests {
         assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player4"));
     }
 
+    @Test
+    void R72() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(driver, "1C", "",
+                List.of(
+                        "KS 2C",
+                        "4C 6C 9D",
+                        "7D",
+                        "3H JH QC 1C 1H"
+                ));
+
+        playCard(driver, "2C");
+
+        driver = players.get(1);
+        playCard(driver, "4C");
+        playCard(driver, "6C");
+
+        // Validate turn complete
+        assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player3"));
+    }
+
 }
