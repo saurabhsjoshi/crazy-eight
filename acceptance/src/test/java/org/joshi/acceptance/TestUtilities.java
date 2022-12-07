@@ -113,6 +113,10 @@ public class TestUtilities {
         getById(driver, "Suits" + suit + "Btn").click();
     }
 
+    public static boolean validateUserScore(WebDriver driver, String username, String score) {
+        return validateText(driver, getById(driver, "scoreLbl_" + username), score);
+    }
+
     public static void rigGame(WebDriver driver, String topCard, String rigDeck, List<String> rig) {
         StringBuilder rigCmd = new StringBuilder(topCard + "," + rigDeck);
         for (var r : rig) {

@@ -702,4 +702,37 @@ public class AcceptanceTests {
         var winnerMsg = getWinnerFromNotification(driver);
         assertTrue(validateText(driver, winnerMsg, "Player Player2 has won this round!"));
     }
+
+    @Test
+    void R78() {
+        var driver = players.get(0);
+        var startGame = getStartGameBtn(driver);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(driver, "4C", "",
+                List.of(
+                        "1S 4S",
+                        "3S",
+                        "8H JH 6H KH KS",
+                        "8C 8D 2D"
+                ));
+
+        playCard(driver, "4S");
+
+        assertTrue(validateText(driver, getCurrentTurnLbl(driver), "Current Turn: Player2"));
+
+        driver = players.get(1);
+        playCard(driver, "3S");
+
+        // Validate game winner msg
+        var winnerMsg = getWinnerFromNotification(driver);
+        assertTrue(validateText(driver, winnerMsg, "Player Player2 has won the game!"));
+
+        // Validate scores
+        assertTrue(validateUserScore(driver, "Player1", "1"));
+        assertTrue(validateUserScore(driver, "Player2", "0"));
+        assertTrue(validateUserScore(driver, "Player3", "86"));
+        assertTrue(validateUserScore(driver, "Player4", "102"));
+    }
 }
