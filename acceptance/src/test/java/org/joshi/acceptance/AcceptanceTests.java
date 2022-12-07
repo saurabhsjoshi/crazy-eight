@@ -735,4 +735,187 @@ public class AcceptanceTests {
         assertTrue(validateUserScore(driver, "Player3", "86"));
         assertTrue(validateUserScore(driver, "Player4", "102"));
     }
+
+    @Test
+    void R80() {
+        var player1 = players.get(0);
+        var player2 = players.get(1);
+        var player3 = players.get(2);
+        var player4 = players.get(3);
+        var startGame = getStartGameBtn(player1);
+        startGame.click();
+
+        // SETUP GAME
+        rigGame(player1, "4D", "2C 3C 4C 10C JC 7C",
+                List.of(
+                        "4H 7S 5D 6D 9D",
+                        "4S 6S KC 8H 10D",
+                        "9S 6C 9C JD 3H",
+                        "7D JH QH KH 5C"
+                ));
+
+        playCard(player1, "4H");
+
+        assertTrue(validateText(player2, getCurrentTurnLbl(player2), "Current Turn: Player2"));
+        playCard(player2, "4S");
+
+        assertTrue(validateText(player3, getCurrentTurnLbl(player3), "Current Turn: Player3"));
+        playCard(player3, "9S");
+
+        assertTrue(validateText(player3, getCurrentTurnLbl(player3), "Current Turn: Player4"));
+        drawCard(player4);
+        assertNotNull(getCardInHandBtn(player4, "2C"));
+        drawCard(player4);
+        assertNotNull(getCardInHandBtn(player4, "3C"));
+        drawCard(player4);
+        assertNotNull(getCardInHandBtn(player4, "4C"));
+        skipTurn(player4);
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        playCard(player1, "7S");
+
+        assertTrue(validateText(player2, getCurrentTurnLbl(player2), "Current Turn: Player2"));
+        playCard(player2, "6S");
+
+        assertTrue(validateText(player3, getCurrentTurnLbl(player3), "Current Turn: Player3"));
+        playCard(player3, "6C");
+
+        assertTrue(validateText(player4, getCurrentTurnLbl(player4), "Current Turn: Player4"));
+        playCard(player4, "2C");
+
+        assertTrue(validateText(player4, getCurrentTurnLbl(player4), "Current Turn: Player1"));
+        drawCard(player1);
+        assertNotNull(getCardInHandBtn(player1, "10C"));
+        assertNotNull(getCardInHandBtn(player1, "JC"));
+        playCard(player1, "JC");
+
+        assertTrue(validateText(player2, getCurrentTurnLbl(player2), "Current Turn: Player2"));
+        playCard(player2, "KC");
+
+        assertTrue(validateText(player2, getCurrentTurnLbl(player2), "Current Turn: Player3"));
+        playCard(player3, "9C");
+
+        assertTrue(validateText(player4, getCurrentTurnLbl(player4), "Current Turn: Player4"));
+        playCard(player4, "3C");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        drawCard(player1);
+        assertNotNull(getCardInHandBtn(player1, "7C"));
+        playCard(player1, "7C");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        playCard(player2, "8H");
+        selectSuit(player2, "Diamonds");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player3"));
+        playCard(player3, "JD");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player4"));
+        playCard(player4, "7D");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        playCard(player1, "9D");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        playCard(player2, "10D");
+
+        var winnerMsg = getWinnerFromNotification(player2);
+        assertTrue(validateText(player2, winnerMsg, "Player Player2 has won this round!"));
+
+        // Validate scores
+        validateUserScore(player1, "Player1", "21");
+        validateUserScore(player1, "Player2", "0");
+        validateUserScore(player1, "Player3", "3");
+        validateUserScore(player1, "Player4", "39");
+
+        rigGame(player1, "10D", "KS QS KH 6D QD JD 6S JS 10S",
+                List.of(
+                        "7D 4S 7C 4H 5D",
+                        "9D 3S 9C 3H JC",
+                        "3D 9S 3C 9H 5H",
+                        "4D 7S 4C 5S 8D"
+                ));
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        playCard(player2, "9D");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player3"));
+        playCard(player3, "3D");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player4"));
+        playCard(player4, "4D");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        playCard(player1, "4S");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        playCard(player2, "3S");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player3"));
+        playCard(player3, "9S");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player4"));
+        playCard(player4, "7S");
+
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        playCard(player1, "7C");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        playCard(player2, "9C");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player3"));
+        playCard(player3, "3C");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player4"));
+        playCard(player4, "4C");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        playCard(player1, "4H");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        playCard(player2, "3H");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player3"));
+        playCard(player3, "9H");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player4"));
+        drawCard(player4);
+        assertNotNull(getCardInHandBtn(player4, "KS"));
+        drawCard(player4);
+        assertNotNull(getCardInHandBtn(player4, "QS"));
+        drawCard(player4);
+        assertNotNull(getCardInHandBtn(player4, "KH"));
+        playCard(player4, "KH");
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player1"));
+        drawCard(player1);
+        assertNotNull(getCardInHandBtn(player1, "6D"));
+        drawCard(player1);
+        assertNotNull(getCardInHandBtn(player1, "QD"));
+        drawCard(player1);
+        assertNotNull(getCardInHandBtn(player1, "JD"));
+        skipTurn(player1);
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player2"));
+        drawCard(player2);
+        assertNotNull(getCardInHandBtn(player2, "6S"));
+        drawCard(player2);
+        assertNotNull(getCardInHandBtn(player2, "JS"));
+        drawCard(player2);
+        assertNotNull(getCardInHandBtn(player2, "10S"));
+        skipTurn(player2);
+
+        assertTrue(validateText(player1, getCurrentTurnLbl(player1), "Current Turn: Player3"));
+        playCard(player3, "5H");
+
+        // Validate game winner msg
+        winnerMsg = getWinnerFromNotification(player3);
+        assertTrue(validateText(player3, winnerMsg, "Player Player3 has won the game!"));
+
+        validateUserScore(player1, "Player1", "59");
+        validateUserScore(player1, "Player2", "36");
+        validateUserScore(player1, "Player3", "3");
+        validateUserScore(player1, "Player4", "114");
+    }
 }

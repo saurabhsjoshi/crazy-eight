@@ -125,8 +125,8 @@ public class TestUtilities {
 
         var input = new WebDriverWait(driver, Duration.ofSeconds(2))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("rigTxt")));
-
         input.sendKeys(rigCmd);
         input.sendKeys(Keys.ENTER);
+        input.clear();
     }
 }
