@@ -341,7 +341,7 @@ export function GameScreen(props: { username: string }) {
           <Toast.Header>
             <strong className="me-auto">Winner!</strong>
           </Toast.Header>
-          <Toast.Body>{roundWinnerMsg.winner}</Toast.Body>
+          <Toast.Body id="roundWinnerToastBody">{roundWinnerMsg.winner}</Toast.Body>
         </Toast>
 
         <Toast id="drawCardsToast" show={showDrawMsg} delay={5000} autohide onClose={toggleShowDrawMsg}>

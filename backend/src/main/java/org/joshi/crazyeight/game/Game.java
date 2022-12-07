@@ -160,11 +160,6 @@ public class Game {
             cardsToDraw = 0;
         }
 
-        if (players.get(currentPlayer).getHand().isEmpty()) {
-            result.setRoundWinner(players.get(currentPlayer).getUsername());
-            return result;
-        }
-
         cardsDrawn = 0;
 
         if (cardsToDraw != 0) {
@@ -178,6 +173,11 @@ public class Game {
                 // Reset if the card played is not another two
                 cardsToDraw = 0;
             }
+        }
+
+        if (players.get(currentPlayer).getHand().isEmpty()) {
+            result.setRoundWinner(players.get(currentPlayer).getUsername());
+            return result;
         }
 
         if (topCard.rank() == Rank.EIGHT) {
