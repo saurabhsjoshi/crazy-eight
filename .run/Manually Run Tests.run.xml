@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AcceptanceTests" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+  <configuration default="false" name="Manually Run Tests" type="JUnit" factoryName="JUnit">
     <module name="crazy-eight.acceptance.test" />
     <extension name="coverage">
       <pattern>

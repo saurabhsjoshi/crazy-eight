@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="test" />
+          <option value="acceptance:test" />
         </list>
       </option>
       <option name="vmOptions" />
@@ -18,6 +18,8 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <method v="2" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="clean build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="-x test" />
+    </method>
   </configuration>
 </component>

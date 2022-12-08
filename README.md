@@ -8,3 +8,6 @@ This project uses Spring Boot with WebFlux for handling server requests and the 
 - `backend` Backend application written in Spring Boot
 - `frontend` Frontend application written in React
 - `bin` Directory that will contain the final 'fat' JAR containing bundled backend and frontend applications
+
+# Run Acceptance Tests
+To run `selenium` based acceptance test, execute the 'Build & Test' run configuration in IntelliJ.
