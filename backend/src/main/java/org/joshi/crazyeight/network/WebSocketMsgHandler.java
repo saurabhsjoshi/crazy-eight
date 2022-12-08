@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WebSocketMsgHandler extends TextWebSocketHandler {
 
-    @Value("${game.rigged:true}")
+    @Value("${game.rigged:false}")
     private boolean rigged;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -107,7 +107,7 @@ public class WebSocketMsgHandler extends TextWebSocketHandler {
 
         if (game.getPlayers().isEmpty()) {
             // This is the first player, inform them they are the host
-            sendMsg(session, new HostMsg());
+            sendMsg(session, new HostMsg(rigged));
         }
 
         game.addPlayer(username);
