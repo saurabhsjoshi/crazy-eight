@@ -5,6 +5,11 @@ import PlayerScoresTable, {PlayerScore} from "./PlayerScoresTable";
 import Button from "react-bootstrap/Button";
 import PlayerHand, {Card, onCardClick, onDrawCardClick, Rank, Suit, toText, Turn} from "./PlayerHand";
 
+interface HostConfig {
+  isHost: boolean,
+  isRigged: boolean
+}
+
 export function GameScreen(props: { username: string }) {
   const [directionOfPlay, setDirectionOfPlay] = useState<number>(1);
 
@@ -29,7 +34,11 @@ export function GameScreen(props: { username: string }) {
 
   const [turnInfo, setTurnInfo] = useState<Turn | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [isHost, setHost] = useState<boolean>(false);
+  const [hostConfig, setHostConfig] = useState<HostConfig>({
+    isHost: false,
+    isRigged: false
+  });
+
   const [socketUrl] = useState('ws://localhost:8080/api');
   const {sendJsonMessage, lastMessage, readyState} = useWebSocket(socketUrl);
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
@@ -100,8 +109,11 @@ export function GameScreen(props: { username: string }) {
       }
 
       // We are the host
-      if (type === "Host") {
-        setHost(true);
+      if (data["type"] === "Host") {
+        setHostConfig({
+          isHost: true,
+          isRigged: data.rigged
+        });
         return;
       }
 
@@ -309,7 +321,7 @@ export function GameScreen(props: { username: string }) {
         <PlayerScoresTable directionOfPlay={directionOfPlay} playerScores={playerScores}/>
         <Container>
           {
-              isHost &&
+              hostConfig.isHost &&
               !gameStarted &&
               <Button onClick={onStartGame}
                       disabled={playerScores.length < 2} id="startGameBtn"
@@ -324,7 +336,7 @@ export function GameScreen(props: { username: string }) {
         }
 
         {
-            isHost &&
+            hostConfig.isRigged &&
             <Row className="mt-4">
                 <input autoComplete="off" id="rigTxt" type="" onChange={onChange} onKeyDown={onRigInput}/>
             </Row>
