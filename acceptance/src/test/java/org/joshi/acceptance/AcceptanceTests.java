@@ -56,7 +56,7 @@ public class AcceptanceTests {
 
     @BeforeEach
     public void setup() throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", "crazy-eight.jar");
+        ProcessBuilder builder = new ProcessBuilder(getJavaPath(), "-jar", "crazy-eight.jar", "--game.rigged=true");
         builder.directory(new File(Path.of("").toAbsolutePath().toString()));
         builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         server = builder.start();
